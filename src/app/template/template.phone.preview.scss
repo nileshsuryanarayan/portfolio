@@ -1,0 +1,38 @@
+/*********** Responsive styles for portrait mode phone ***********/
+@media screen and (min-width: 320px) and (max-width: 481px) {
+
+    .left-panel {
+        display: none;
+        background-color: #253847;
+        // height: 100vh;
+        // height: 100%;
+    }
+
+    .right-window {
+        grid-column: span 12 !important;
+        width: fit-content;
+    }
+
+    .menu-exp-light {
+        display: inline-block;
+    }
+}
+
+/*********** Responsive styles for landscape mode phone ***********/
+@media screen and (min-width: 481px) and (max-width: 641px) {
+    
+    .left-panel {
+        display: none;
+        background-color: #253847;
+        // height: 100%;
+    }
+
+    .right-window {
+        grid-column: span 12 !important;
+        width: fit-content;
+    }
+
+    .menu-exp-light {
+        display: inline-block;
+    }
+}

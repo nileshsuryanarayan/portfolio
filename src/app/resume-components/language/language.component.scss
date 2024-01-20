@@ -1,0 +1,20 @@
+.circle-meter {
+    margin: 8px 0;
+}
+
+.score-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid #FFF;
+    background-color: #FFF;
+}
+
+.filled-circle {
+    background-color: #66979C;
+}
+
+/*********** Responsive styles for portrait mode phone ***********/
+@media screen and (min-width: 320px) and (max-width: 481px) {
+
+}

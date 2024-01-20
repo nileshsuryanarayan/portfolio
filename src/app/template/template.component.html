@@ -1,0 +1,42 @@
+<div *ngIf="!isPreview; else showPrintPreview" #printPreview [class]="normalClass">
+    <div id="left-panel" class="grid-4 left-panel">
+        <profile-picture-component [preview]="isPreview"></profile-picture-component>
+        <contact-component [preview]="isPreview"></contact-component>
+        <skills-component></skills-component>
+        <language-component></language-component>
+        <hobbies-component></hobbies-component>
+    </div>
+    <div id="right-window" class="grid-8 right-window">
+        <title-component></title-component>
+        <summary-component></summary-component>
+        <experience-component></experience-component>
+        <education-component></education-component>
+        <projects-component></projects-component>
+    </div>
+</div>
+<ng-template #showPrintPreview>
+    <div #printPreview class="grid template-1-style">
+        <div id="left-panel" class="grid-4 left-panel">
+            <profile-picture-component [preview]="isPreview"></profile-picture-component>
+            <contact-component [preview]="isPreview"></contact-component>
+            <skills-component></skills-component>
+            <language-component></language-component>
+            <hobbies-component></hobbies-component>
+        </div>
+        <div id="right-window" class="grid-8 right-window">
+            <title-component></title-component>
+            <summary-component></summary-component>
+            <experience-component></experience-component>
+            <education-component></education-component>
+            <projects-component></projects-component>
+        </div>
+    </div>
+</ng-template>
+<div>
+    <span *ngIf="isPreview; else showPrintBtn">
+        <button class="print-btn" (click)="printPdf()">Print PDF</button>
+    </span>
+    <ng-template #showPrintBtn>
+        <button class="print-btn" (click)="printPreview()">Print preview</button>
+    </ng-template>
+</div>

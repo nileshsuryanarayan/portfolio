@@ -1,0 +1,111 @@
+.template-wrapper {
+    // Below combinations of A4 size paper
+    // width: 2480px;
+    // height: 3508px;
+
+    // Below combinations of A4 size paper
+    // width: 595px;
+    // height: 842px;
+
+    width: 100%;
+    // width: 210mm;
+    overflow-y: auto;
+    margin: 0 auto;
+}
+
+.left-panel {
+    background-color: #253847;
+    // height: 100vh;
+}
+
+.right-window {
+    background-color: #FFF;
+}
+
+label {
+    word-wrap: break-word;
+}
+
+.section-right {
+    margin: 2.5%;
+
+    h3 {
+        font-size: 16px;
+        font-weight: 500;
+        border-bottom: 1px solid #192630;
+        color: #192630;
+        padding: 4px 0;
+    }
+
+    .section-right-content {
+        margin: 8px 0;
+        text-align: justify;
+    }
+}
+
+.exp-title {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.experience, .project {
+    margin: 8px 0;
+}
+
+.menu-exp-light {
+    display: none;
+    margin: 8px;
+}
+
+.print-btn {
+    margin: 16px;
+    padding: 8px 16px;
+    background-color: #2053FC;
+    border-style: none;
+    border-radius: 3px;
+    color: #fff;
+}
+
+.print-btn:hover {
+    background-color: #1845E9;
+    cursor: pointer;
+}
+
+/*********** Responsive styles for portrait mode phone ***********/
+@media screen and (min-width: 320px) and (max-width: 481px) {
+
+    .left-panel {
+        display: none;
+        background-color: #253847;
+        // height: 100vh;
+        // height: 100%;
+    }
+
+    .right-window {
+        grid-column: span 12 !important;
+        width: fit-content;
+    }
+
+    .menu-exp-light {
+        display: inline-block;
+    }
+}
+
+/*********** Responsive styles for landscape mode phone ***********/
+@media screen and (min-width: 481px) and (max-width: 641px) {
+    
+    .left-panel {
+        display: none;
+        background-color: #253847;
+        // height: 100%;
+    }
+
+    .right-window {
+        grid-column: span 12 !important;
+        width: fit-content;
+    }
+
+    .menu-exp-light {
+        display: inline-block;
+    }
+}

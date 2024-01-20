@@ -1,0 +1,49 @@
+meter {
+    width: 100%;
+    position: relative;
+    transition: all 0.5s;
+    height: 18px;
+    border: none;
+  }
+  
+  ::-webkit-meter-bar {
+    background: #FFF;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  ::-webkit-meter-suboptimum-value {
+    background: #66979C;
+  }
+  
+  ::-webkit-meter-optimum-value {
+    background: #66979C;
+  }
+  
+  ::-webkit-meter-even-less-good-value {
+    background: #66979C;
+  }
+  
+  meter::before, meter::after {
+    position: absolute;
+    bottom: -2em;
+    color: #eee;
+  }
+  
+  meter::before {
+    // content: 'Bundle size';
+  }
+  
+  meter::after {
+    // content: attr(data-display-value) ' kB';
+    // right: 0;
+  }
+
+.w-50 {
+  width: 50%;
+}
+
+/*********** Responsive styles for portrait mode phone ***********/
+@media screen and (min-width: 320px) and (max-width: 481px) {
+
+}

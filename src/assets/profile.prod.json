@@ -1,0 +1,52 @@
+{
+    "name": "Suvidha Kamble",
+    "title": "Fullstack Software Engineer (Java/Angular)",
+    "selfDescription": "Passionately builds web applications with Angular and Spring MVC. Developed micro-services for web applications to serve data. Fascinated by Machine Learning advancements and would love to work on practical industrial projects on Machine Learning.",
+    "objective": "Procient, skilled, philomath and ambitious Software Engineer with 5 years of experience in developing high-performance web applications based on micro-service architecture and Angular 7. Experience in development, testing and deployment automation using CI/CD. Seeking position in a reputed organization where my skills and knowledge can be leveraged as an asset to seek solutions for real world problems.",
+    "experiences": [
+        {
+            "companyName": "Associate Technology - Synechron",
+            "timePeriod": "May 2021 - Present",
+            "project": "HSBC Bank France - STAR (Finance and Middleware IT)",
+            "workPoints": [
+                { "point": "Worked with Software architects and business users to re-build a multi-page legacy ASP web application into a single page web application,thereby boosting the overall performance of the web application" },
+                { "point": "Provided additional features of <b>internationalization</b> and <b>SSO</b> further improving user experience" },
+                { "point": "Automated the code deployment workow using <b>Jenkins CI/CD</b> jobs and Pipeline" },
+                { "point": "Built a <b>service monitoring dashboard</b> and <b>alerting mechanism</b> to ease the production support for the team" }
+            ]
+        }
+    ],
+    "educations": [
+        {
+            "stream": "B.E. (Electronics and Telecommunication)",
+            "university": "University of Mumbai",
+            "period": "Jun 2014 - May 2018"
+        }
+    ],
+    "projects": [
+        {
+            "name": "STAR",
+            "period": "Jul 2021 - Present",
+            "role": "Specialist Engineer",
+            "description": "<b>S</b>uite for <b>T</b>reatment, <b>A</b>djustment and <b>R</b>eporting (STAR) is a French regional Finance application which caters to MSS Products",
+            "workpoints": [
+                { "point": "Receives Trade/Valuation Data from dierent Front office/Bank office systems and accounting data for reconcilliation" },
+                { "point": "Application provides enriched data to the downstream systems like Regulatory" }
+            ]
+        },
+        {
+            "name": "CAPS",
+            "period": "Sep 2018 - Apr 2021",
+            "role": "Software Engineer",
+            "description": "<b>C</b>ards <b>A</b>cquiring and <b>P</b>rocessing <b>S</b>ystem (CAPS) is responsible for on-boarding merchants who wish to accept various card payments. Nets provides those merchants online payment services",
+            "workpoints": [
+                { "point": "CAPS maintains the records of the merchants using Nets online services, their agreements with Nets for settlement of Invoices" },
+                { "point": "Maintains the records of the transactions and provides the merchants regular reports through web app and via email reporting services" }
+            ]
+        }
+    ],
+    "github": "https://github.com/nileshsuryanarayan",
+    "linkedIn": "https://www.linkedin.com/in/nilesh-suryanarayan-b45277170/",
+    "instagram": "https://www.instagram.com/nileshsuryanarayan/",
+    "facebook": "https://www.facebook.com/nilesh.suryanarayan.9/"
+}

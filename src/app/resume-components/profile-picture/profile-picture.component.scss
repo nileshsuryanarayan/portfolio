@@ -1,0 +1,23 @@
+.img-wrapper {
+    margin: 10%;
+    text-align: center;
+
+    img {
+        border: 2px solid #FFF;
+        margin: 0 auto;
+        border-radius: 50%;
+        // width: 66%;
+        width: 270.58px;
+        height: 270.58px;
+
+        // width: 50mm;
+        // height: 50mm;
+    }
+}
+
+.preview {
+    img {
+        width: 120px !important;
+        height: 120px !important;
+    }
+}

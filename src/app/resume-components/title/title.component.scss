@@ -1,0 +1,54 @@
+.head {
+    margin: 2.5%;
+    background-color: #F5F5F5;
+    padding: 8px;
+    #underlined {
+        width: 36%;
+        height: 2px;
+        background-color: #192630;
+    }
+}
+
+.profile-name {
+    padding: 8px 0;
+    label {
+        font-size: 28px;
+        font-weight: 400;
+        color: #192630;
+    }
+}
+
+.profile-title {
+    padding: 8px 0;
+    label {
+        font-size: 16px;
+        font-weight: 400;
+        color: #5F5F5F;
+    }
+}
+
+.profile-name .preview {
+    label {
+        font-size: 28px;
+    }
+}
+
+.menu-exp-dark {
+    display: none;
+}
+
+/*********** Responsive styles for portrait mode phone ***********/
+// @media screen and (min-width: 320px) and (max-width: 481px) {
+
+//     .menu-exp-dark {
+//         display: inline-block;
+//     }
+// }
+
+/*********** Responsive styles for landscape mode phone ***********/
+// @media screen and (min-width: 481px) and (max-width: 641px) {
+    
+//     .menu-exp-dark {
+//         display: inline-block;
+//     }
+// }

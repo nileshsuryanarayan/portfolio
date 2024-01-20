@@ -1,0 +1,50 @@
+{
+    "name": "Suvidha Sudarshan Kamble",
+    "title": "QA Chemist",
+    "selfDescription": "QA chemist with 3 years' experience in developing and implementing quality assurance procedures. Adept at analyzing data, identifying trends, and preparing reports to ensure product safety and customer satisfaction, Recognized by chemical Corporation for successfully improving process efficiency while reducing errors across the manufacturing line. Currently seeking a position as quality assurance chemist at centaur pharmaceuticals Company",
+    "objective": "Organic Chemist with 3+ years of experience in quality assurance and laboratory operations. Strong problem-solving skills, attention to detail, and excellent teamwork abilities. Proven track record of implementing process improvements resulting in increased efficiency and cost savings Experienced in using a variety of laboratory techniques and equipment, including AA Spectrometry, Fluorescence Spectrometry, HPLC, and GC, Holds a Bachelor's degree in Chemistry from the University of Mumbai, Excited to contribute to a highly regulated environment and support the company's mission of delivering high-quality products.",
+    "experiences": [
+        {
+            "companyName": "Centaur pharmaceutical",
+            "timePeriod": "Sep 2022 - Present",
+            "project": "",
+            "workPoints": [
+                { "point": "Routine physiochemical and microbiological analyses of intermediate and finished products according to the quality control procedure" },
+                { "point": "Reports to Quality Coordinator short falls in production, quality process and issues that need attention" },
+                { "point": "Prepares and standardizes chemical solutions. Ensures that all microbiological analyses carried out are done under aseptic conditions and tools and reagents used/required are also adequately sterile" },
+                { "point": "Provides Quality Coordinator with stock quantities and stocks that need reordering. Inspects all chemicals and supplies that come into the factory and either accept or reject based on the procedure for incoming inspection" }
+            ]
+        },
+        {
+            "companyName": "Autocal solution",
+            "timePeriod": "Mar 2020- May 2022",
+            "project": "",
+            "workPoints": [
+                { "point": "Conducted routine activities with moderate guidance and supervision" },
+                { "point": "Proficient in using of Empower and exposure to the basic theory and operated principles of GC, GC-MS" },
+                { "point": "Performed analytical testing of raw materials and finished product of flavors and fragrances using different analytical techniques-Prepared laboratory reagents, standards, and solutions for test procedures and added others in test procedures and performed daily odor analysis to analyze Sample Performed analysis with having knowledge in cGMP, OSHA, FDA and other" },
+                { "point": "regulations in order to assure laboratory compliance. Evaluated laboratory SOPs and recommend improvement opportunities to maintain compliance with corporate and regulatory guidelines. Developed and revised laboratory SOPs as required" }
+            ]
+        }
+    ],
+    "educations": [
+        {
+            "stream": "B.sc  (Chemistry)",
+            "university": "University of Mumbai",
+            "period": "Jun 2015- May 2018"
+        }
+    ],
+    "projects": [
+        {
+            "name": "ChemAnalytica",
+            "period": "Jan 2022- Feb 2023",
+            "role": "Chemist",
+            "description": "In this project, finding interaction of arsenopyrite with acidic solutions and some of the variables that affect the dissolution process.performing the experiments at low pH (typically between 1 to 4) because of avoiding precipitation of Fe(OH)3 and because low pH mimics the environment produced by the mineral reactions",
+            "workpoints": []
+        }
+    ],
+    "github": "",
+    "linkedIn": "",
+    "instagram": "",
+    "facebook": ""
+}
