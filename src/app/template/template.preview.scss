@@ -7,8 +7,6 @@
 
     margin-left: auto;
     margin-right: auto;
-    margin-top: 28px;
-    margin-bottom: 28px;
     box-shadow: grey 5px 5px 10px;
 
     .left-panel {
@@ -67,6 +65,11 @@
         background-color: #1845E9;
         cursor: pointer;
     }
+}
+
+.gen-style {
+    margin-top: 28px;
+    margin-bottom: 28px;
 }
 
 h3 {

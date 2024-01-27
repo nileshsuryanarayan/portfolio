@@ -91,6 +91,47 @@ label {
     }
 }
 
+/** Animation below **/
+@keyframes slide-down {
+    0% {
+        max-height: 0;
+        opacity: 0;
+    }
+    12% {
+        max-height: 12vh;
+        opacity: 0.12;
+    }
+    25% {
+        max-height: 25vh;
+        opacity: 0.25;
+    }
+    47% {
+        max-height: 47vh;
+        opacity: 0.47;
+    }
+    50% {
+        max-height: 50vh;
+        opacity: 0.5;
+    }
+    62% {
+        max-height: 62vh;
+        opacity: 0.62;
+    }
+    75% {
+        max-height: 75vh;
+        opacity: 0.75;
+    }
+    87% {
+        max-height: 87vh;
+        opacity: 0.87;
+    }
+    100% {
+        max-height: fit-content;
+        opacity: 1;
+    }
+}
+
+
 /*********** Responsive styles for landscape mode phone ***********/
 @media screen and (min-width: 481px) and (max-width: 641px) {
     

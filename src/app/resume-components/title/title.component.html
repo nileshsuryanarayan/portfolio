@@ -15,7 +15,7 @@
         </svg>
     </div>
     <div (click)="printPage()" [class]="profileName">
-        <label *ngIf="!isEditMode">{{ name | uppercase }}</label>
+        <label id="profileName" *ngIf="!isEditMode">{{ name | uppercase }}</label>
         <input *ngIf="isEditMode" type="text" value="{{ name }}" [(ngModel)]="name" class="input-field w-50" placeholder="Full name">
     </div>
     <div id="underlined"></div>

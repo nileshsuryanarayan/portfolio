@@ -12,8 +12,13 @@ export class TemplateComponent implements OnInit {
     value: number = 0;
 
     isPreview: boolean = false;
+    brief: boolean = true;
 
     normalClass = 'grid template-wrapper';
+    
+    defaultEditModeClass = 'grid-12 grid';
+    printPreviewClass = 'grid template-1-style gen-style';
+    editOrPrintClass = this.defaultEditModeClass;
 
     @ViewChild('printPreview', { static: false }) elem!: ElementRef;
 
@@ -28,13 +33,36 @@ export class TemplateComponent implements OnInit {
     printPdf() {
         console.log('Page to be printed called...');
         this.service.hidePencilIcon();
-        
-        let pdfContent = new jsPDF('p', 'px', [842, 595]); // [297, 210]
+
+        this.printPreStyle();
+
+        let pdfContent = new jsPDF('p', 'px', [1042, 795]); // [297, 210] - [842, 595]
         pdfContent.html(this.elem.nativeElement, {
             callback: (pdfContent) => {
                 pdfContent.save('Resume.pdf');
+                this.resetPageView();
             }
         });
+    }
+
+    printPreStyle() {
+        // Adjust the margin
+        let genTemplates: HTMLElement[] = Array.from(document.getElementsByClassName('gen-style') as HTMLCollectionOf<Element>) as HTMLElement[];
+        genTemplates.forEach(elem => {
+            elem.style.marginTop = '0';
+            elem.style.marginBottom = '0';
+        });
+
+        // Adjust the profile name size
+        let profileNameLbl: HTMLElement = document.getElementById('profileName') as HTMLElement;
+        profileNameLbl.style.fontSize = '28px';
+    }
+
+    resetPageView() {
+        this.value = 0;
+        this.isPreview = false;
+        this.brief = true;
+        this.editOrPrintClass = this.defaultEditModeClass;
     }
 
     edit() {
@@ -52,10 +80,24 @@ export class TemplateComponent implements OnInit {
         rightElement.style.display = 'none';
     }
 
-    printPreview() {
+    showPrintPreview() {
         this.isPreview = true;
         this.service.hidePencilIcon();
         this.normalClass = 'grid template-1-style';
+        this.editOrPrintClass = this.printPreviewClass;
+    }
+
+    displayBrief() {
+        console.log('DisplayBrief clicked...');
+        let elem = document.getElementById('left-panel');
+        if (elem !== null) {
+            // true, then display block
+            if (this.brief)
+                elem.style.display = 'block';
+            else
+                elem.style.display = 'none';
+            this.brief = !this.brief;
+        }
     }
 
 }
