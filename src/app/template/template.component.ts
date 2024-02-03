@@ -63,6 +63,7 @@ export class TemplateComponent implements OnInit {
         this.isPreview = false;
         this.brief = true;
         this.editOrPrintClass = this.defaultEditModeClass;
+        this.normalClass = 'grid template-wrapper';
     }
 
     edit() {

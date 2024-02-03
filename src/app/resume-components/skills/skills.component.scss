@@ -43,6 +43,19 @@ meter {
   width: 50%;
 }
 
+.meter {
+  height: 8px;
+  background-color: #66979C;
+  border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+}
+
+.meter-border {
+  border-radius: 20px;
+  background-color: #fff;
+  padding: 1px;
+}
+
 /*********** Responsive styles for portrait mode phone ***********/
 @media screen and (min-width: 320px) and (max-width: 481px) {
 

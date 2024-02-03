@@ -29,7 +29,10 @@
             </div>
         </div>
         <div class=" f-24">
-            <meter *ngIf="!isEditMode" min="0" max="100" low="25" high="75" value="{{ skill.value }}" optimum="90"></meter>
+            <!-- <meter *ngIf="!isEditMode" min="0" max="100" low="25" high="75" value="{{ skill.value }}" optimum="90"></meter> -->
+            <div class="grid meter-border">
+                <div [class]="meterValues[i]"></div>
+            </div>
             <input *ngIf="isEditMode" type="number" min="1" max="10" value="{{ skills[i].score }}" [(ngModel)]="skills[i].score" class="input-field" placeholder="Skill score">
         </div>
     </div>

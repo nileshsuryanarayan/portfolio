@@ -18,6 +18,9 @@ export class SkillsComponent implements OnInit {
 
     isEditMode = false;
 
+    meterClass: string = 'meter ';
+    meterValues: string[] = [];
+
     constructor(
         public service: ResumeComponentService
     ) {
@@ -44,6 +47,8 @@ export class SkillsComponent implements OnInit {
         this.skills.push(skill5);
         this.skills.push(skill6);
         this.skills.push(skill7);
+
+        this.updateSkillClasses();
     }
 
     editClicked() {
@@ -53,6 +58,7 @@ export class SkillsComponent implements OnInit {
     saveChanges() {
         this.skills.forEach(skill => {
             skill.value = skill.score * 10;
+            this.updateSkillClasses();
         });
         this.isEditMode = false;
     }
@@ -64,6 +70,18 @@ export class SkillsComponent implements OnInit {
 
     removeSkill(index: number) {
         this.skills.splice(index, 1);
+    }
+
+    updateSkillClasses() {
+        for(let i=0; i < this.skills.length; i++) {
+            let gridCol = this.calculateGridCol(this.skills[i].score);
+            this.meterValues[i] = this.meterClass + 'grid-' + gridCol;
+        }
+    }
+
+    calculateGridCol(score: number): number {
+        let num: number = (score * 12) / 10;
+        return Math.floor(num);
     }
 
 }
