@@ -1,0 +1,93 @@
+.mat-tree {
+    display: grid;
+    grid-template-columns: 100%;
+  
+    &-invisible {
+      display: none;
+    }
+  }
+  
+  button {
+    background: none;
+    border: none;
+  }
+  
+  /*
+   * Padding for leaf nodes.
+   * Leaf nodes need to have padding so as to align with other non-leaf nodes
+   * under the same parent.
+   */
+  .mat-tree div[role='group'] > .mat-tree-node {
+    padding-left: 2.5rem;
+  }
+  
+  .mat-tree-node {
+    min-width: 15rem;
+    text-align: center;
+    margin: 0.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    position: relative;
+  
+    button {
+      flex: 0 0 2rem;
+    }
+  
+    div {
+      flex: 1 1 auto;
+      margin-right: 2rem;
+    }
+  }
+  
+  .mat-nested-tree-node {
+    display: grid;
+    grid-template-columns: minmax(auto, 100%);
+  
+    flex-flow: column nowrap;
+    align-items: center;
+    position: relative;
+  
+    &::before {
+      content: '';
+      position: absolute;
+      top: 5rem;
+      left: 25%;
+      width: 50%;
+      height: 2px;
+      background: var(--black);
+    }
+  
+    &::after {
+      display: none;
+      content: '';
+      position: absolute;
+      left: -20px;
+      bottom: -20px;
+      width: calc(100% + 20px);
+      height: 2px;
+      background: var(--black);
+    }
+  
+    [role='group'] {
+      width: 100%;
+      position: relative;
+      align-items: flex-start;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  .level-1 {
+    background: var(--level-1);
+  }
+  .level-2 {
+    background: var(--level-2);
+  }
+  
+  .level-3 {
+    background: var(--level-3);
+  }
+  
+  .level-4 {
+    background: var(--level-4);
+  }
+  
