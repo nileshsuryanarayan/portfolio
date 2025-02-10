@@ -1,3 +1,60 @@
-<div class="tree-container">
+<!-- <div class="tree-container">
   <svg></svg>
+</div> -->
+
+<div class="family-tree-container">
+  <svg></svg>
+  <div class="popup" *ngIf="popupVisible">
+    <div class="popup-content">
+      <div class="grid popop-header">
+        <div class="grid-11">{{ popupNode.firstName }} {{ popupNode.lastName }}</div>
+        <div class="grid-1">
+          <svg (click)="hideDetails()" id="close-btn" xmlns="http://www.w3.org/2000/svg" fill="red" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-83.6 290.5c4.8 4.8 4.8 12.6 0 17.4l-40.5 40.5c-4.8 4.8-12.6 4.8-17.4 0L256 313.3l-66.5 67.1c-4.8 4.8-12.6 4.8-17.4 0l-40.5-40.5c-4.8-4.8-4.8-12.6 0-17.4l67.1-66.5-67.1-66.5c-4.8-4.8-4.8-12.6 0-17.4l40.5-40.5c4.8-4.8 12.6-4.8 17.4 0l66.5 67.1 66.5-67.1c4.8-4.8 12.6-4.8 17.4 0l40.5 40.5c4.8 4.8 4.8 12.6 0 17.4L313.3 256l67.1 66.5z"/></svg>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="grid-6 left">Father</div>
+        <div *ngIf="popupEditMode; else fatherName" class="grid-6 left">
+          <input type="text" [(ngModel)]="popupFatherName">
+        </div>
+        <ng-template #fatherName class="grid-6 left">: {{ popupFatherName }}</ng-template>
+      </div>
+      <div class="grid">
+        <div class="grid-6 left">Mother</div>
+        <div *ngIf="popupEditMode; else motherName" class="grid-6 left">
+          <input type="text" [(ngModel)]="popupMotherName">
+        </div>
+        <ng-template #motherName class="grid-6 left">: {{ popupMotherName }}</ng-template>
+      </div>
+      <div class="grid">
+        <div class="grid-6 left">Date of Birth</div>
+        <div *ngIf="popupEditMode; else dateOfBirth" class="grid-6 left">
+          <input type="text" >
+        </div>
+        <ng-template #dateOfBirth class="grid-6 left">: {{ popupNode.dateOfBirth }}</ng-template>
+      </div>
+      <div class="grid">
+        <div class="grid-6 left">Date of Death</div>
+        <div *ngIf="popupEditMode; else dateOfDeath" class="grid-6 left">
+          <input type="text" >
+        </div>
+        <ng-template #dateOfDeath class="grid-6 left">: {{ popupNode.dateOfDeath }}</ng-template>
+      </div>
+      
+      <div class="grid">
+        <div class="grid-6 center">
+          <button *ngIf="popupEditMode; else editButton" (click)="0">Cancel</button>
+          <ng-template #editButton>
+            <button (click)="switchToEditMode()">Edit</button>
+          </ng-template>
+        </div>
+        <div class="grid-6 center">
+          <button *ngIf="popupEditMode; else addChildren" (click)="0">Save</button>
+          <ng-template #addChildren>
+            <button (click)="0">Add children</button>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

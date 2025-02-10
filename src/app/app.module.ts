@@ -13,6 +13,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CssGridTreeComponent } from './family-tree/css-grid-tree/css-grid-tree.component';
 import { CdkHierarchyComponent } from './family-tree/cdk-hierarchy/cdk-hierarchy.component';
+import { FamilyTreeService } from './family-tree/family-tree.service';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { BasicHeadersInterceptor } from './common/interceptors/basic-headers.interceptor';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -31,8 +36,18 @@ import { CdkHierarchyComponent } from './family-tree/cdk-hierarchy/cdk-hierarchy
     MatIconModule,
     MatButtonModule,
     MatTreeModule,
+    HttpClientModule,
+    CommonModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [
+    FamilyTreeService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: BasicHeadersInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

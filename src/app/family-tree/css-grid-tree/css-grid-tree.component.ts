@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { TreeNode } from '../family-node.model';
-import { DUMMY_TREE } from '../family.data';
 
 @Component({
   selector: 'app-css-grid-tree',
@@ -26,7 +25,7 @@ export class CssGridTreeComponent implements OnInit, OnChanges {
   }
 
   setup() {
-    this.data = DUMMY_TREE;
+    // this.data = DUMMY_TREE;
   }
 
 }
