@@ -7,51 +7,59 @@
   <div class="popup" *ngIf="popupVisible">
     <div class="popup-content">
       <div class="grid popop-header">
-        <div class="grid-11">{{ popupNode.firstName }} {{ popupNode.lastName }}</div>
+        <div class="grid-11 popup-header-text">{{ popupNode.firstName }} {{ popupNode.lastName }}</div>
         <div class="grid-1">
           <svg (click)="hideDetails()" id="close-btn" xmlns="http://www.w3.org/2000/svg" fill="red" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-83.6 290.5c4.8 4.8 4.8 12.6 0 17.4l-40.5 40.5c-4.8 4.8-12.6 4.8-17.4 0L256 313.3l-66.5 67.1c-4.8 4.8-12.6 4.8-17.4 0l-40.5-40.5c-4.8-4.8-4.8-12.6 0-17.4l67.1-66.5-67.1-66.5c-4.8-4.8-4.8-12.6 0-17.4l40.5-40.5c4.8-4.8 12.6-4.8 17.4 0l66.5 67.1 66.5-67.1c4.8-4.8 12.6-4.8 17.4 0l40.5 40.5c4.8 4.8 4.8 12.6 0 17.4L313.3 256l67.1 66.5z"/></svg>
         </div>
       </div>
-      <div class="grid">
-        <div class="grid-6 left">Father</div>
-        <div *ngIf="popupEditMode; else fatherName" class="grid-6 left">
+      <div class="grid popup-content-row">
+        <div class="grid-5 left popup-field-lbl popup-field">Father</div>
+        <div *ngIf="popupEditMode; else fatherName" class="grid-7 left">
           <input type="text" [(ngModel)]="popupFatherName">
         </div>
-        <ng-template #fatherName class="grid-6 left">: {{ popupFatherName }}</ng-template>
+        <ng-template #fatherName>
+          <div class="grid-7 left popup-field">: {{ popupFatherName }}</div>
+        </ng-template>
       </div>
-      <div class="grid">
-        <div class="grid-6 left">Mother</div>
-        <div *ngIf="popupEditMode; else motherName" class="grid-6 left">
+      <div class="grid popup-content-row">
+        <div class="grid-5 left popup-field-lbl popup-field">Mother</div>
+        <div *ngIf="popupEditMode; else motherName" class="grid-7 left">
           <input type="text" [(ngModel)]="popupMotherName">
         </div>
-        <ng-template #motherName class="grid-6 left">: {{ popupMotherName }}</ng-template>
+        <ng-template #motherName class="grid-7 left">
+          <div class="grid-7 left popup-field">: {{ popupMotherName }}</div>
+        </ng-template>
       </div>
-      <div class="grid">
-        <div class="grid-6 left">Date of Birth</div>
-        <div *ngIf="popupEditMode; else dateOfBirth" class="grid-6 left">
+      <div class="grid popup-content-row">
+        <div class="grid-5 left popup-field-lbl popup-field">Date of Birth</div>
+        <div *ngIf="popupEditMode; else dateOfBirth" class="grid-7 left">
           <input type="text" >
         </div>
-        <ng-template #dateOfBirth class="grid-6 left">: {{ popupNode.dateOfBirth }}</ng-template>
+        <ng-template #dateOfBirth class="grid-7 left">
+          <div class="grid-7 left popup-field">: {{ popupNode.dateOfBirth }}</div>
+        </ng-template>
       </div>
-      <div class="grid">
-        <div class="grid-6 left">Date of Death</div>
-        <div *ngIf="popupEditMode; else dateOfDeath" class="grid-6 left">
+      <div *ngIf="popupDateOfDeathValid" class="grid popup-content-row">
+        <div class="grid-5 left popup-field-lbl popup-field">Date of Death</div>
+        <div *ngIf="popupEditMode; else dateOfDeath" class="grid-7 left">
           <input type="text" >
         </div>
-        <ng-template #dateOfDeath class="grid-6 left">: {{ popupNode.dateOfDeath }}</ng-template>
+        <ng-template #dateOfDeath class="grid-7 left">
+          <div class="grid-7 left popup-field">: {{ popupNode.dateOfDeath }}</div>
+        </ng-template>
       </div>
       
-      <div class="grid">
+      <div class="grid popup-content-row">
         <div class="grid-6 center">
-          <button *ngIf="popupEditMode; else editButton" (click)="0">Cancel</button>
+          <button *ngIf="popupEditMode; else editButton" (click)="0" class="btn-grad popup-field-lbl">Cancel</button>
           <ng-template #editButton>
-            <button (click)="switchToEditMode()">Edit</button>
+            <button (click)="switchToEditMode()" class="btn-grad popup-field-lbl">Edit</button>
           </ng-template>
         </div>
         <div class="grid-6 center">
-          <button *ngIf="popupEditMode; else addChildren" (click)="0">Save</button>
+          <button *ngIf="popupEditMode; else addChildren" (click)="0" class="btn-grad popup-field-lbl">Save</button>
           <ng-template #addChildren>
-            <button (click)="0">Add children</button>
+            <button (click)="0" class="btn-grad popup-field-lbl">Add children</button>
           </ng-template>
         </div>
       </div>

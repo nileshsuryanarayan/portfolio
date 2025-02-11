@@ -3,6 +3,14 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { Node, Tree } from "./family-tree.model";
 
+/**
+ * Interface representing the restructured family data.
+ */
+export interface RestructuredFamilyData {
+    tree: Tree;
+    map: Map<number, Node>;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -12,6 +20,11 @@ export class FamilyTreeService {
         private http: HttpClient
     ) {}
 
+    /**
+     * Fetches family data from the API.
+     * 
+     * @returns {Observable<Node[]>} An observable that emits an array of Node objects.
+     */
     public getFamilyData(): Observable<Node[]> {
         const username = 'sandeep';
         const password = 'test123';
@@ -22,7 +35,13 @@ export class FamilyTreeService {
         return this.http.get<Node[]>('http://localhost:8080/suryanarayan-family-tree-api/family-members', { headers });
     }
 
-    public restructure(nodes: Node[]): Tree {
+    /**
+     * Restructures a flat list of nodes into a tree structure.
+     * 
+     * @param {Node[]} nodes - An array of Node objects to be restructured.
+     * @returns {Tree} A Tree object representing the restructured family data.
+     */
+    public restructure(nodes: Node[]): RestructuredFamilyData {
         let familyMap: Map<number, Node> = new Map<number, Node>();
         for(let obj of nodes) {
             var id = obj.id;
@@ -58,7 +77,13 @@ export class FamilyTreeService {
                 tree = new Tree(node);
             }
         }
-        return tree;
+
+        let familyData: RestructuredFamilyData = {
+            tree,
+            map: familyMap
+        };
+
+        return familyData;
     }
 
 }

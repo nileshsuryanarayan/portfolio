@@ -18,6 +18,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BasicHeadersInterceptor } from './common/interceptors/basic-headers.interceptor';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UtilityService } from './common/services/utility.service';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { FormsModule } from '@angular/forms';
       provide: HTTP_INTERCEPTORS,
       useClass: BasicHeadersInterceptor,
       multi: true
-    }
+    },
+    UtilityService
   ],
   bootstrap: [AppComponent]
 })

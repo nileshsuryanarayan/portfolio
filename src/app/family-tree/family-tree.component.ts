@@ -3,14 +3,14 @@ import * as d3 from 'd3';
 import { Tree, Node } from './family-tree.model';
 import { Arjun, Waman } from './family.data';
 import { FamilyTreeService } from './family-tree.service';
+import { UtilityService } from '../common/services/utility.service';
 
 @Component({
   selector: 'app-family-tree',
   templateUrl: './family-tree.component.html',
-  styleUrls: ['./family-tree.component.scss']
+  styleUrls: ['./family-tree.component.scss'],
 })
 export class FamilyTreeComponent implements OnInit {
-
   private svg: any;
   private margin = { top: 20, right: 90, bottom: 30, left: 90 };
   private width = 1000 - this.margin.left - this.margin.right;
@@ -28,12 +28,15 @@ export class FamilyTreeComponent implements OnInit {
   popupMotherName: string;
   popupDateOfBirth: string;
   popupDateOfDeath: string;
+  popupDateOfDeathValid: boolean = false;
   popupEditMode = false;
+  familyMap: Map<number, Node>;
 
   constructor(
     private el: ElementRef,
-    private familyService: FamilyTreeService
-  ) { }
+    private familyService: FamilyTreeService,
+    private util: UtilityService
+  ) {}
 
   ngOnInit(): void {
     this.dataInit();
@@ -41,19 +44,20 @@ export class FamilyTreeComponent implements OnInit {
 
   dataInit() {
     this.familyService.getFamilyData().subscribe(
-      data => {
+      (data) => {
         // Do something with data
         console.log('Received Data: ', data);
-        let tree: Tree = this.familyService.restructure(data);
+        let tree: Tree = this.familyService.restructure(data)?.tree;
+        this.familyMap = this.familyService.restructure(data)?.map;
         console.log('Restructured Data ======: ', tree);
-        
+
         // Static data
         this.treeData = tree; // new Tree(Arjun);
         // this.treeData = new Tree(Arjun);
         this.createSvg();
         this.drawTree();
       },
-      error => {
+      (error) => {
         // Handle error and display proper message on UI
         console.error(error);
       }
@@ -61,7 +65,9 @@ export class FamilyTreeComponent implements OnInit {
   }
 
   private createSvg(): void {
-    this.svg = d3.select(this.el.nativeElement).select('svg')
+    this.svg = d3
+      .select(this.el.nativeElement)
+      .select('svg')
       .attr('width', this.width + this.margin.left + this.margin.right)
       .attr('height', this.height + this.margin.top + this.margin.bottom)
       .call(
@@ -70,18 +76,21 @@ export class FamilyTreeComponent implements OnInit {
         })
       );
 
-      this.g = this.svg.append('g').attr('transform', `translate(${this.margin.left},${this.margin.top})`);
-      
+    this.g = this.svg
+      .append('g')
+      .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
   }
 
   private drawTree(): void {
     const root = d3.hierarchy(this.treeData.rootNode, (d) => d.children);
-    const treeLayout = d3.tree().size([this.height, this.width - this.margin.left - this.margin.right]);
+    const treeLayout = d3
+      .tree()
+      .size([this.height, this.width - this.margin.left - this.margin.right]);
     treeLayout(root);
-  
+
     // Calculate max width and height based on node positions
-    const maxX = d3.max(root.descendants(), d => d.y);
-    const maxY = d3.max(root.descendants(), d => d.x);
+    const maxX = d3.max(root.descendants(), (d) => d.y);
+    const maxY = d3.max(root.descendants(), (d) => d.x);
 
     // Update SVG dimensions if needed
     const newWidth = maxX + this.margin.left + this.margin.right; // Add margin as needed
@@ -101,36 +110,41 @@ export class FamilyTreeComponent implements OnInit {
     //   .attr('y2', (d: any) => d.target.x + 15)
     //   .style('stroke', 'black');
 
-
     // Define gradient in SVG
-    const gradient = this.svg.append('defs')
-    .append('linearGradient')
-    .attr('id', 'tree-gradient')
-    .attr('x1', '0%')
-    .attr('x2', '100%')
-    .attr('y1', '0%')
-    .attr('y2', '100%');
+    const gradient = this.svg
+      .append('defs')
+      .append('linearGradient')
+      .attr('id', 'tree-gradient')
+      .attr('x1', '0%')
+      .attr('x2', '100%')
+      .attr('y1', '0%')
+      .attr('y2', '100%');
 
-    gradient.append('stop')
-    .attr('offset', '0%')
-    .attr('stop-color', '#6b3f2b');  // Dark brown for tree trunk
+    gradient.append('stop').attr('offset', '0%').attr('stop-color', '#6b3f2b'); // Dark brown for tree trunk
 
-    gradient.append('stop')
-    .attr('offset', '100%')
-    .attr('stop-color', '#d6b38b');  // Lighter brown for branch tips
+    gradient
+      .append('stop')
+      .attr('offset', '100%')
+      .attr('stop-color', '#d6b38b'); // Lighter brown for branch tips
 
-    this.svg.selectAll('.link')
+    this.svg
+      .selectAll('.link')
       .data(root.links())
-      .enter().append('path')
+      .enter()
+      .append('path')
       .attr('class', 'link')
       .attr('d', (d: any) => {
-        const curvature = 0.5;  // Controls the curvature of the branches
+        const curvature = 0.5; // Controls the curvature of the branches
         const sourceX = d.source.y + 100;
         const sourceY = d.source.x + 15;
         const targetX = d.target.y;
         const targetY = d.target.x + 15;
-        
-        return `M${sourceX},${sourceY}C${sourceX + curvature * (targetX - sourceX)},${sourceY + 30} ${targetX - curvature * (targetX - sourceX)},${targetY - 30} ${targetX},${targetY}`;
+
+        return `M${sourceX},${sourceY}C${
+          sourceX + curvature * (targetX - sourceX)
+        },${sourceY + 30} ${targetX - curvature * (targetX - sourceX)},${
+          targetY - 30
+        } ${targetX},${targetY}`;
       })
       .style('fill', 'none')
       .style('stroke', 'url(#tree-gradient)')
@@ -140,52 +154,60 @@ export class FamilyTreeComponent implements OnInit {
         const maxDepth = d3.max(root.descendants(), (node: any) => node.depth); // Maximum depth in the tree
 
         // Tapering effect: deeper nodes will have thinner strokes
-        return Math.max(1, 5 - (parentDepth / maxDepth) * 4);  // Return stroke width based on depth
+        return Math.max(1, 5 - (parentDepth / maxDepth) * 4); // Return stroke width based on depth
       });
 
-
-
-  
     // Render spouse connections and nodes
-    const nodes = this.svg.selectAll('.node')
+    const nodes = this.svg
+      .selectAll('.node')
       .data(root.descendants())
-      .enter().append('g')
+      .enter()
+      .append('g')
       .attr('class', 'node')
       .attr('transform', (d: any) => `translate(${d.y},${d.x})`);
-  
-    nodes.append('rect')
+
+    nodes
+      .append('rect')
       .attr('width', 100)
       .attr('height', 30)
       .attr('fill', 'white')
-      .attr('stroke', (d: any) => d.data.gender === 'MALE' ? 'blue' : 'pink')
+      .attr('stroke', (d: any) => (d.data.gender === 'MALE' ? 'blue' : 'pink'))
       .attr('id', (d: any) => `${d.data.firstName}-${d.data.lastName}`);
 
-
     // Append leaf shapes around each node
-    nodes.append('path')
-    .attr('d', 'M 0,0 Q 10,10 20,0 Q 10,-10 0,0 Z')  // Simple leaf shape (you can use more complex ones)
-    .attr('fill', 'green')
-    .attr('transform', (d: any) => `translate(${d.y - 60},${d.x - 30}) rotate(-30)`)
-    .style('opacity', 0.7); // Slight transparency to make it subtle
+    nodes
+      .append('path')
+      .attr('d', 'M 0,0 Q 10,10 20,0 Q 10,-10 0,0 Z') // Simple leaf shape (you can use more complex ones)
+      .attr('fill', 'green')
+      .attr(
+        'transform',
+        (d: any) => `translate(${d.y - 60},${d.x - 30}) rotate(-30)`
+      )
+      .style('opacity', 0.7); // Slight transparency to make it subtle
 
-    nodes.append('path')
-    .attr('d', 'M 0,0 Q 10,10 20,0 Q 10,-10 0,0 Z')  // Leaf on the opposite side
-    .attr('fill', 'green')
-    .attr('transform', (d: any) => `translate(${d.y + 60},${d.x - 30}) rotate(30)`)
-    .style('opacity', 0.7);
-  
-    nodes.append('text')
+    nodes
+      .append('path')
+      .attr('d', 'M 0,0 Q 10,10 20,0 Q 10,-10 0,0 Z') // Leaf on the opposite side
+      .attr('fill', 'green')
+      .attr(
+        'transform',
+        (d: any) => `translate(${d.y + 60},${d.x - 30}) rotate(30)`
+      )
+      .style('opacity', 0.7);
+
+    nodes
+      .append('text')
       .attr('dy', 20)
       .attr('x', 50)
       .style('text-anchor', 'middle')
       .text((d: any) => d.data.firstName)
       .on('mouseover', (event, d) => this.showDetails(d.data, d.x, d.y));
-  
+
     // Render spouse nodes and links
-    root.descendants().forEach(d => {
+    root.descendants().forEach((d) => {
       if (d.data.spouse) {
         const spouses = d.data.spouse; // Array.isArray(d.data.spouse) ? d.data.spouse : [d.data.spouse];
-        
+
         let d1y1 = d.y;
         let d1x1 = d.x;
         const yMultiplier = 40;
@@ -195,31 +217,38 @@ export class FamilyTreeComponent implements OnInit {
           const spouseNode = {
             ...spouse,
             x: d1x1 + 40, // Align spouse on the same y-axis as the partner
-            y: d1y1 // Adjust y position to display spouse node to the right
+            y: d1y1, // Adjust y position to display spouse node to the right
           };
-          console.log('Partner: ', d.data.firstName);
-          console.log('SpouseNodes =====: ', spouseNode);
-          console.log(`===> Spouse${index}: ${d.y}, ${d.x}`);
-          this.svg.append('g')
+          this.svg
+            .append('g')
             .attr('class', 'node')
             .attr('id', `${d.data.firstName}`)
-            .attr('transform', `translate(${spouseNode.y},${spouseNode.x})`).append('rect')
+            .attr('transform', `translate(${spouseNode.y},${spouseNode.x})`)
+            .append('rect')
             .attr('width', 100)
             .attr('height', 30)
             .attr('fill', 'none')
             .attr('stroke', spouseNode.gender === 'MALE' ? 'blue' : 'pink')
-            .attr('id', (d: any) => `${spouseNode.firstName}-${spouseNode.lastName}`);
+            .attr(
+              'id',
+              (d: any) => `${spouseNode.firstName}-${spouseNode.lastName}`
+            );
 
-          const nodes = this.svg.select(`#${d.data.firstName}`).append('text')
-          .attr('dy', (index * yMultiplier) + 20)
-          .attr('x', 50)
-          .style('text-anchor', 'middle')
-          .text(spouseNode.firstName)
-          .on('mouseover', (event, d) => this.showDetails(spouseNode, spouseNode.x, spouseNode.y));
+          const nodes = this.svg
+            .select(`#${d.data.firstName}`)
+            .append('text')
+            .attr('dy', index * yMultiplier + 20)
+            .attr('x', 50)
+            .style('text-anchor', 'middle')
+            .text(spouseNode.firstName)
+            .on('mouseover', (event, d) =>
+              this.showDetails(spouseNode, spouseNode.x, spouseNode.y)
+            );
           // .on('mouseout', () => this.hideDetails());
 
           // Draw line between partner and spouse
-          this.svg.append('line')  // Line 1
+          this.svg
+            .append('line') // Line 1
             .attr('class', 'link')
             .attr('x1', d1y1 + 70) // Partner's position
             .attr('y1', d1x1 + 30) // Center of partner's rectangle
@@ -228,7 +257,8 @@ export class FamilyTreeComponent implements OnInit {
             .style('stroke', 'black');
 
           // Draw line between partner and spouse
-          this.svg.append('line') // Line 2
+          this.svg
+            .append('line') // Line 2
             .attr('class', 'link')
             .attr('x1', d1y1 + 30) // Partner's position
             .attr('y1', d1x1 + 30) // Center of partner's rectangle
@@ -236,19 +266,17 @@ export class FamilyTreeComponent implements OnInit {
             .attr('y2', spouseNode.x) // Center of spouse's rectangle
             .style('stroke', 'black');
 
-            d1y1 = spouseNode.y;
-            d1x1 = spouseNode.x;
-            console.log(`===> NewPosition${index}: ${d1y1}, ${d1x1}`);
+          d1y1 = spouseNode.y;
+          d1x1 = spouseNode.x;
         });
       }
     });
 
-
-
-
-    this.svg.selectAll('.link')
+    this.svg
+      .selectAll('.link')
       .data(root.links())
-      .enter().append('path')
+      .enter()
+      .append('path')
       .attr('class', 'link')
       .attr('d', (d: any) => {
         const sourceX = d.source.y + 100;
@@ -269,18 +297,43 @@ export class FamilyTreeComponent implements OnInit {
       .style('fill', 'none')
       .style('stroke', 'black')
       .style('stroke-width', (d: any) => {
-        const distance = Math.abs(d.source.x - d.target.x);  // Vertical distance between nodes
-        const maxDistance = d3.max(root.links(), (link: any) => Math.abs(link.source.x - link.target.x));  // Maximum distance for normalization
-        return Math.max(1, 5 - (distance / maxDistance) * 4);  // Tapered stroke width
+        const distance = Math.abs(d.source.x - d.target.x); // Vertical distance between nodes
+        const maxDistance = d3.max(root.links(), (link: any) =>
+          Math.abs(link.source.x - link.target.x)
+        ); // Maximum distance for normalization
+        return Math.max(1, 5 - (distance / maxDistance) * 4); // Tapered stroke width
       });
-
   }
 
   showDetails(data: Node, x: number, y: number): void {
+    this.resetPopupValues();
     this.popupVisible = true;
     this.popupNode = data;
-    this.popupFatherName = "";
-    this.popupMotherName = "";
+    this.popupFatherName = this.util.isStringEmpty(
+      this.familyMap.get(+data.fatherId)?.firstName
+    )
+      ? 'No data available'
+      : this.familyMap.get(+data.fatherId).firstName +
+        ' ' +
+        this.familyMap.get(+data.fatherId).lastName;
+
+    this.popupMotherName = this.util.isStringEmpty(
+      this.familyMap.get(+data.motherId)?.firstName
+    )
+      ? 'No data available'
+      : this.familyMap.get(+data.motherId).firstName +
+        ' ' +
+        this.familyMap.get(+data.motherId).lastName;
+
+    this.popupDateOfDeathValid = this.util.isDateValid(data.dateOfDeath);
+  }
+
+  resetPopupValues(): void {
+    this.popupNode = null;
+    this.popupFatherName = '';
+    this.popupMotherName = '';
+    this.popupDateOfBirth = '';
+    this.popupDateOfDeath = '';
   }
 
   hideDetails(): void {
@@ -299,5 +352,4 @@ export class FamilyTreeComponent implements OnInit {
   updateFamilYMemberInfo() {
     console.log('UPDATE FAMILY MEMBER info called');
   }
-
 }

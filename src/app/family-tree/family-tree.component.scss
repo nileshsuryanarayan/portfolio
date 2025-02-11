@@ -1,32 +1,3 @@
-// .tree-container {
-//     width: 100%;    
-//     height: 100%;    
-//     overflow: hidden;    
-//     background-color: #f0f0f0;    
-// }
-
-// .node circle {    
-//     fill: #69b3a2;    
-//     stroke: #555;    
-//     stroke-width: 3px;    
-// }
-
-// .node text {
-//     font: 12px sans-serif;    
-// }
-
-// .link {    
-//     fill: none;    
-//     stroke: #ccc;    
-//     stroke-width: 2px;    
-// }
-
-// .spouse-link {
-//     stroke: blue; /* or any color you prefer */
-//     stroke-width: 2px;
-//     stroke-dasharray: 5, 5; /* Dashed line style */
-// }
-
 .node {
     border: 20px;
 }
@@ -69,10 +40,10 @@
     width: 25%;
     min-width: 300px !important;
     padding: 16px;
-    background-color: white;
     border-radius: 4px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     z-index: 20; /* Ensure the popup is above the overlay */
+    background-color: aliceblue
   }
   
   /* Content inside the popup */
@@ -80,8 +51,34 @@
     text-align: center;
   }
 
+  .popup-content-row {
+    margin: 6px 0;
+  }
+
   .popop-header {
-    height: 20px !important;
+    min-height: 20px !important;
+    padding: 12px 8px;
+    font-size: 22px;
+    border-radius: 2px;
+    background-color: aliceblue;
+    font-weight: 600;
+  }
+
+  .popup-header-text {
+    background: -webkit-linear-gradient(#314755 0%, #26a0da  51%, #314755  100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+  }
+
+  .popup-field-lbl {
+    font-weight: 500;
+  }
+
+  .popup-field {
+    background: -webkit-linear-gradient(#314755 0%, #26a0da  51%, #314755  100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   
   /* Button styling */
@@ -123,3 +120,42 @@
   //   left: 100%;
   //   transform: translateX(5px);
   // }
+
+  input[type=text] {
+    width: 100%;
+    padding: 6px 8px;
+    margin: 2px 0;
+    box-sizing: border-box;
+    border: 1px solid #555;
+    outline: none;
+    border-radius: 2px;
+  }
+  
+  input[type=text]:focus {
+    // background: -webkit-linear-gradient(#77A1D3 0%, #79CBCA 51%, #77A1D3 100%);
+    // color: black;
+  }
+
+  button {
+    margin: 8px 0;
+  }
+
+  
+  .btn-grad {background-image: linear-gradient(to right, #77A1D3 0%, #79CBCA  51%, #77A1D3  100%)}
+  // .btn-grad {background-image: linear-gradient(to right, #314755 0%, #26a0da  51%, #314755  100%)}
+  .btn-grad {
+     text-align: center;
+     text-transform: uppercase;
+     transition: 0.5s;
+     background-size: 200% auto;
+     color: white;            
+     box-shadow: 0 0 20px #eee;
+     border-radius: 4px;
+   }
+
+   .btn-grad:hover {
+     background-position: right center; /* change the direction of the change here */
+     color: #fff;
+     text-decoration: none;
+   }
+   
