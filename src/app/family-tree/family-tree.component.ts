@@ -32,6 +32,9 @@ export class FamilyTreeComponent implements OnInit {
   popupEditMode = false;
   familyMap: Map<number, Node>;
 
+  males: Node[];
+  females: Node[];
+
   constructor(
     private el: ElementRef,
     private familyService: FamilyTreeService,
@@ -46,14 +49,16 @@ export class FamilyTreeComponent implements OnInit {
     this.familyService.getFamilyData().subscribe(
       (data) => {
         // Do something with data
-        console.log('Received Data: ', data);
         let tree: Tree = this.familyService.restructure(data)?.tree;
         this.familyMap = this.familyService.restructure(data)?.map;
+        this.males = this.familyService.filterMales(data);
+        this.females = this.familyService.filterFemales(data);
         console.log('Restructured Data ======: ', tree);
+        console.log('MALES ======: ', this.males);
+        console.log('FEMALES ======: ', this.females);
 
         // Static data
-        this.treeData = tree; // new Tree(Arjun);
-        // this.treeData = new Tree(Arjun);
+        this.treeData = tree;
         this.createSvg();
         this.drawTree();
       },
@@ -98,17 +103,6 @@ export class FamilyTreeComponent implements OnInit {
 
     this.svg.attr('width', newWidth + this.BUFFER_SIZE);
     this.svg.attr('height', newHeight + this.BUFFER_SIZE);
-
-    // Render links
-    // this.svg.selectAll('.link')
-    //   .data(root.links())
-    //   .enter().append('line')
-    //   .attr('class', 'link')
-    //   .attr('x1', (d: any) => d.source.y + 100)
-    //   .attr('y1', (d: any) => d.source.x + 15)
-    //   .attr('x2', (d: any) => d.target.y + 0)
-    //   .attr('y2', (d: any) => d.target.x + 15)
-    //   .style('stroke', 'black');
 
     // Define gradient in SVG
     const gradient = this.svg
@@ -326,6 +320,7 @@ export class FamilyTreeComponent implements OnInit {
         this.familyMap.get(+data.motherId).lastName;
 
     this.popupDateOfDeathValid = this.util.isDateValid(data.dateOfDeath);
+    
   }
 
   resetPopupValues(): void {
@@ -343,10 +338,12 @@ export class FamilyTreeComponent implements OnInit {
 
   switchToEditMode() {
     this.popupEditMode = true;
+    this.popupDateOfDeathValid = true;
   }
 
   cancelEditMode() {
     this.popupEditMode = false;
+    this.popupDateOfDeathValid = this.util.isDateValid(this.popupNode.dateOfDeath);
   }
 
   updateFamilYMemberInfo() {

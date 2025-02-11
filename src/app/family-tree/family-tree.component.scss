@@ -121,7 +121,7 @@
   //   transform: translateX(5px);
   // }
 
-  input[type=text] {
+  input[type=text], input[type=date], select {
     width: 100%;
     padding: 6px 8px;
     margin: 2px 0;
@@ -159,3 +159,6 @@
      text-decoration: none;
    }
    
+   #edit-btn {
+    width: 100%;
+   }

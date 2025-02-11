@@ -86,4 +86,24 @@ export class FamilyTreeService {
         return familyData;
     }
 
+    public filterMales(nodes: Node[]): Node[] {
+        let males: Node[] = [];
+        nodes.forEach(node => {
+            if(node.gender === 'MALE') {
+                males.push(node);
+            }
+        });
+        return males;
+    }
+
+    public filterFemales(nodes: Node[]): Node[] {
+        let females: Node[] = [];
+        nodes.forEach(node => {
+            if(node.gender === 'FEMALE') {
+                females.push(node);
+            }
+        });
+        return females;
+    }
+
 }
