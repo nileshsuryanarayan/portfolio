@@ -55,7 +55,6 @@ export class FamilyTreeComponent implements OnInit {
         this.females = this.familyService.filterFemales(data);
         console.log('Restructured Data ======: ', tree);
         console.log('MALES ======: ', this.males);
-        console.log('FEMALES ======: ', this.females);
 
         // Static data
         this.treeData = tree;
@@ -121,6 +120,36 @@ export class FamilyTreeComponent implements OnInit {
       .attr('offset', '100%')
       .attr('stop-color', '#d6b38b'); // Lighter brown for branch tips
 
+    const maleGradient = this.svg
+      .append('defs')
+      .append('linearGradient')
+      .attr('id', 'male-gradient')
+      .attr('x1', '0%')
+      .attr('x2', '71%')
+      .attr('x3', '100%')
+      .attr('y1', '0%')
+      .attr('y2', '71%')
+      .attr('y3', '100%');
+    
+    maleGradient.append('stop').attr('offset', '0%').attr('stop-color', '#77A1D3');
+    maleGradient.append('stop').attr('offset', '71%').attr('stop-color', '#79CBCA');
+    maleGradient.append('stop').attr('offset', '100%').attr('stop-color', '#77A1D3');
+
+    const femaleGradient = this.svg
+      .append('defs')
+      .append('linearGradient')
+      .attr('id', 'female-gradient')
+      .attr('x1', '0%')
+      .attr('x2', '71%')
+      .attr('x3', '100%')
+      .attr('y1', '0%')
+      .attr('y2', '71%')
+      .attr('y3', '100%');
+    
+    femaleGradient.append('stop').attr('offset', '0%').attr('stop-color', '#ff6e7f');
+    femaleGradient.append('stop').attr('offset', '71%').attr('stop-color', '#FFB6C1');
+    femaleGradient.append('stop').attr('offset', '100%').attr('stop-color', '#ff6e7f');
+
     this.svg
       .selectAll('.link')
       .data(root.links())
@@ -164,9 +193,11 @@ export class FamilyTreeComponent implements OnInit {
       .append('rect')
       .attr('width', 100)
       .attr('height', 30)
-      .attr('fill', 'white')
-      .attr('stroke', (d: any) => (d.data.gender === 'MALE' ? 'blue' : 'pink'))
-      .attr('id', (d: any) => `${d.data.firstName}-${d.data.lastName}`);
+      .attr('fill', (d: any) => (d.data.gender === 'MALE' ? 'url(#male-gradient)' : 'url(#female-gradient)'))
+      // .attr('stroke', (d: any) => (d.data.gender === 'MALE' ? 'blue' : 'pink'))
+      .attr('id', (d: any) => `${d.data.firstName}-${d.data.lastName}`)
+      .attr('rx', 2)
+      .attr('ry', 2);
 
     // Append leaf shapes around each node
     nodes
@@ -204,8 +235,7 @@ export class FamilyTreeComponent implements OnInit {
 
         let d1y1 = d.y;
         let d1x1 = d.x;
-        const yMultiplier = 40;
-        console.log(`===> Original ${d.y}, ${d.x}`);
+        const yMultiplier = 0;
         spouses.forEach((spouse, index) => {
           // Render spouse node
           const spouseNode = {
@@ -213,23 +243,27 @@ export class FamilyTreeComponent implements OnInit {
             x: d1x1 + 40, // Align spouse on the same y-axis as the partner
             y: d1y1, // Adjust y position to display spouse node to the right
           };
-          this.svg
+
+          const spouseGroup = this.svg
             .append('g')
             .attr('class', 'node')
             .attr('id', `${d.data.firstName}`)
-            .attr('transform', `translate(${spouseNode.y},${spouseNode.x})`)
-            .append('rect')
+            .attr('transform', `translate(${spouseNode.y},${spouseNode.x})`);
+
+
+            spouseGroup.append('rect')
             .attr('width', 100)
             .attr('height', 30)
-            .attr('fill', 'none')
-            .attr('stroke', spouseNode.gender === 'MALE' ? 'blue' : 'pink')
+            .attr('fill', (a: any) => (spouseNode.gender === 'MALE' ? 'url(#male-gradient)' : 'url(#female-gradient)')) // (d: any) => (d.data.gender === 'MALE' ? 'url(#male-gradient)' : 'url(#female-gradient)')
+            // .attr('stroke', spouseNode.gender === 'MALE' ? 'blue' : 'pink')
             .attr(
               'id',
               (d: any) => `${spouseNode.firstName}-${spouseNode.lastName}`
-            );
+            )
+            .attr('rx', 2)
+            .attr('ry', 2);
 
-          const nodes = this.svg
-            .select(`#${d.data.firstName}`)
+          spouseGroup
             .append('text')
             .attr('dy', index * yMultiplier + 20)
             .attr('x', 50)
