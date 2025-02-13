@@ -1,3 +1,7 @@
+svg {
+  margin: 10px 20px;
+}
+
 .node {
     border: 20px;
 }
@@ -166,3 +170,7 @@
    .node-rect {
     
    }
+
+  .electric-ball {
+    filter: drop-shadow(0px 0px 8px rgba(0, 255, 255, 0.8));
+  }

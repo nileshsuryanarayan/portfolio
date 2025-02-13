@@ -13,8 +13,8 @@ import { UtilityService } from '../common/services/utility.service';
 export class FamilyTreeComponent implements OnInit {
   private svg: any;
   private margin = { top: 20, right: 90, bottom: 30, left: 90 };
-  private width = 1000 - this.margin.left - this.margin.right;
-  private height = 1400 - this.margin.top - this.margin.bottom;
+  private width = 2000 - this.margin.left - this.margin.right;
+  private height = 2800 - this.margin.top - this.margin.bottom;
   private treeData: Tree;
   private g: any;
 
@@ -120,6 +120,19 @@ export class FamilyTreeComponent implements OnInit {
       .attr('offset', '100%')
       .attr('stop-color', '#d6b38b'); // Lighter brown for branch tips
 
+    const electricBlueGradient = this.svg
+      .append('defs')
+      .append('linearGradient')
+      .attr('id', 'electric-blue-gradient')
+      .attr('x1', '0%')
+      .attr('x2', '100%')
+      .attr('y1', '0%')
+      .attr('y2', '100%');
+    
+    electricBlueGradient.append('stop').attr('offset', '0%').attr('stop-color', '#00d9ff'); // Light electric blue
+    electricBlueGradient.append('stop').attr('offset', '50%').attr('stop-color', '#0077ff'); // Medium electric blue
+    electricBlueGradient.append('stop').attr('offset', '100%').attr('stop-color', '#00ffcc'); // Bright turquoise electric blue
+
     const maleGradient = this.svg
       .append('defs')
       .append('linearGradient')
@@ -170,7 +183,7 @@ export class FamilyTreeComponent implements OnInit {
         } ${targetX},${targetY}`;
       })
       .style('fill', 'none')
-      .style('stroke', 'url(#tree-gradient)')
+      .style('stroke', 'url(#electric-blue-gradient)') // tree-gradient
       .style('stroke-width', (d: any) => {
         // Use depth of the node to determine stroke width (root node has depth 0, deeper nodes get smaller stroke)
         const parentDepth = d.source.depth;
@@ -178,7 +191,19 @@ export class FamilyTreeComponent implements OnInit {
 
         // Tapering effect: deeper nodes will have thinner strokes
         return Math.max(1, 5 - (parentDepth / maxDepth) * 4); // Return stroke width based on depth
-      });
+      })
+      .style('stroke-dasharray', function (this: SVGPathElement) {
+        const length = this.getTotalLength();
+        return length; // Make the dash array equal to the path length
+      })
+      .style('stroke-dashoffset', function (this: SVGPathElement) {
+        const length = this.getTotalLength();
+        return length; // Start with the path hidden
+      })
+      .transition()
+      .duration(2000) // Animation duration in milliseconds
+      .ease(d3.easeLinear) // Linear easing for constant speed
+      .style('stroke-dashoffset', 0); // Animate the stroke to 0, revealing the path;
 
     // Render spouse connections and nodes
     const nodes = this.svg
