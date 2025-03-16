@@ -266,7 +266,8 @@ export class FamilyTreeComponent implements OnInit {
       .attr('x', 50)
       .style('text-anchor', 'middle')
       .text((d: any) => d.data.firstName)
-      .on('mouseover', (event, d) => this.showDetails(d.data, d.x, d.y));
+      // .on('mouseover', (event, d) => this.runTransition())
+      .on('click', (event, d) => this.showDetails(d.data, d.x, d.y));
 
     // Render spouse nodes and links
     root.descendants().forEach((d) => {
@@ -308,9 +309,10 @@ export class FamilyTreeComponent implements OnInit {
             .attr('x', 50)
             .style('text-anchor', 'middle')
             .text(spouseNode.firstName)
-            .on('mouseover', (event, d) =>
-              this.showDetails(spouseNode, spouseNode.x, spouseNode.y)
-            );
+            // .on('mouseover', (event, d) =>
+            //   this.runTransition()
+            // )
+            .on('click', (event, d) => this.showDetails(spouseNode, spouseNode.x, spouseNode.y));
           // .on('mouseout', () => this.hideDetails());
 
           // Draw line between partner and spouse

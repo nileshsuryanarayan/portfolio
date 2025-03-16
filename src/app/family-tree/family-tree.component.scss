@@ -252,3 +252,17 @@ svg {
     position: fixed;
     z-index: 9999;
   }
+
+  /* svg wrapper styling */
+  .svg-wrapper {
+    width: 100vw; /* Full width of the viewport */
+    height: 100vh; /* Full height of the viewport */
+    overflow: auto; /* Enable scrolling */
+    position: relative; /* Needed for absolute positioning of SVG inside the wrapper */
+  }
+
+  // svg {
+  //   width: 100%;
+  //   height: 100%;
+  //   overflow: visible; /* Ensure that the SVG elements are visible outside the container */
+  // }
