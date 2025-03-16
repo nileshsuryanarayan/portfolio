@@ -1,5 +1,6 @@
 svg {
   margin: 10px 20px;
+  z-index: 9990; /* Higher than other elements */
 }
 
 .node {
@@ -47,9 +48,32 @@ svg {
     border-radius: 4px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     z-index: 20; /* Ensure the popup is above the overlay */
-    background-color: aliceblue
+    background-color: aliceblue;
+    max-height: 80%;
+    overflow-y: scroll;
   }
   
+  /* width */
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 5px 0 5px aliceblue;
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background-image: linear-gradient(to down, #77A1D3 0%, #79CBCA  51%, #77A1D3  100%);
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b30000; 
+  }
+
   /* Content inside the popup */
   .popup-content {
     text-align: center;
@@ -100,9 +124,41 @@ svg {
     background-color: #0056b3;
   }
 
+  /* ****** Close button ****** */
+  .close-btn-div {
+    z-index: 9999;
+  }
+
+  .close-btn {
+    background-image: linear-gradient(to right, red 0%, #FAA0A0  25%, red  50%)
+  }
+
+  .close-btn {
+    text-align: center;
+     text-transform: uppercase;
+     transition: 0.5s;
+     background-size: 200% auto;
+     color: white;            
+     box-shadow: 0 0 20px #eee;
+     border-radius: 4px;
+     cursor: pointer;
+  }
+
+  .close-btn:hover {
+    background-position: right center; /* change the direction of the change here */
+    color: #fff;
+    text-decoration: none;
+  }
+
+  #close-btn {
+    z-index: 9999;
+  }
+
   #close-btn:hover {
     cursor: pointer;
   }
+
+  /* ****** ****** ****** */
 
   line.link {
     fill: none; /* No fill since it's a line */
@@ -155,6 +211,7 @@ svg {
      color: white;            
      box-shadow: 0 0 20px #eee;
      border-radius: 4px;
+     cursor: pointer;
    }
 
    .btn-grad:hover {
@@ -173,4 +230,25 @@ svg {
 
   .electric-ball {
     filter: drop-shadow(0px 0px 8px rgba(0, 255, 255, 0.8));
+  }
+
+  input[type="radio"] {
+    margin: 0 5px;
+  }
+
+  .spouse-details {
+    margin: 10px 0;
+    padding: 10px;
+    // background: linear-gradient(to right, #77A1D3, #79CBCA);
+    border-image: linear-gradient(to right, #77A1D3, #79CBCA);
+    border-width: 4px;
+    border-radius: 5px;
+    border-style: solid;
+    border-left: none;
+    border-right: none;
+  }
+
+  .float-button {
+    position: fixed;
+    z-index: 9999;
   }

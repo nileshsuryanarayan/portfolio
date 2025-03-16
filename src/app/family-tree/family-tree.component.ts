@@ -32,8 +32,23 @@ export class FamilyTreeComponent implements OnInit {
   popupEditMode = false;
   familyMap: Map<number, Node>;
 
+  // Update node related temp variables
+  fatherId: string;
+  dateOfBirth: string;
+  dateOfDeath: string;
+
   males: Node[];
   females: Node[];
+
+  additionalChildren: Node[] = [];
+  addedSpouse: Node;
+
+  // Temp Spouse details for adding new spouse
+  spouseFirstName: string;
+  spouseLastName: string;
+  spouseDateOfBirth: string;
+  spouseDateOfDeath: string;
+  spouseGender: string;
 
   constructor(
     private el: ElementRef,
@@ -362,6 +377,10 @@ export class FamilyTreeComponent implements OnInit {
     this.resetPopupValues();
     this.popupVisible = true;
     this.popupNode = data;
+
+    this.dateOfBirth = data.dateOfBirth.toString();
+    this.dateOfDeath = data.dateOfDeath?.toString();
+
     this.popupFatherName = this.util.isStringEmpty(
       this.familyMap.get(+data.fatherId)?.firstName
     )
@@ -393,6 +412,7 @@ export class FamilyTreeComponent implements OnInit {
   hideDetails(): void {
     this.popupVisible = false;
     this.popupEditMode = false;
+    this.resetPopupValues();
   }
 
   switchToEditMode() {
@@ -406,6 +426,20 @@ export class FamilyTreeComponent implements OnInit {
   }
 
   updateFamilYMemberInfo() {
-    console.log('UPDATE FAMILY MEMBER info called');
+    console.log(`FatherId:${this.fatherId}, DateOfBirth:${this.dateOfBirth}, DateOfDeath:${this.dateOfDeath}`);
   }
+
+  isPopupMemberMarried(): boolean {
+    return this.popupNode.married ? this.popupNode.married : false;
+  }
+
+  runTransition() {
+    this.svg
+      .selectAll('.link')
+      .transition()
+      .duration(2000) // Animation duration in milliseconds
+      .ease(d3.easeLinear) // Linear easing for constant speed
+      .style('stroke-dashoffset', 0); // Animate the stroke to 0, revealing the path;
+  }
+
 }
