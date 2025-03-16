@@ -143,7 +143,7 @@ export class FamilyTreeComponent implements OnInit {
       .attr('x2', '100%')
       .attr('y1', '0%')
       .attr('y2', '100%');
-    
+
     electricBlueGradient.append('stop').attr('offset', '0%').attr('stop-color', '#00d9ff'); // Light electric blue
     electricBlueGradient.append('stop').attr('offset', '50%').attr('stop-color', '#0077ff'); // Medium electric blue
     electricBlueGradient.append('stop').attr('offset', '100%').attr('stop-color', '#00ffcc'); // Bright turquoise electric blue
@@ -158,7 +158,7 @@ export class FamilyTreeComponent implements OnInit {
       .attr('y1', '0%')
       .attr('y2', '71%')
       .attr('y3', '100%');
-    
+
     maleGradient.append('stop').attr('offset', '0%').attr('stop-color', '#77A1D3');
     maleGradient.append('stop').attr('offset', '71%').attr('stop-color', '#79CBCA');
     maleGradient.append('stop').attr('offset', '100%').attr('stop-color', '#77A1D3');
@@ -173,7 +173,7 @@ export class FamilyTreeComponent implements OnInit {
       .attr('y1', '0%')
       .attr('y2', '71%')
       .attr('y3', '100%');
-    
+
     femaleGradient.append('stop').attr('offset', '0%').attr('stop-color', '#ff6e7f');
     femaleGradient.append('stop').attr('offset', '71%').attr('stop-color', '#FFB6C1');
     femaleGradient.append('stop').attr('offset', '100%').attr('stop-color', '#ff6e7f');
@@ -290,7 +290,6 @@ export class FamilyTreeComponent implements OnInit {
             .attr('id', `${d.data.firstName}`)
             .attr('transform', `translate(${spouseNode.y},${spouseNode.x})`);
 
-
             spouseGroup.append('rect')
             .attr('width', 100)
             .attr('height', 30)
@@ -357,9 +356,9 @@ export class FamilyTreeComponent implements OnInit {
         const curvature2 = 0.5;
         const curvature3 = 0.7;
 
-        return `M${sourceX},${sourceY} 
-                C${sourceX + curvature1 * (targetX - sourceX)},${sourceY - 50} 
-                ${targetX - curvature2 * (targetX - sourceX)},${targetY - 50} 
+        return `M${sourceX},${sourceY}
+                C${sourceX + curvature1 * (targetX - sourceX)},${sourceY - 50}
+                ${targetX - curvature2 * (targetX - sourceX)},${targetY - 50}
                 ${targetX},${targetY}`;
       })
       .style('fill', 'none')
@@ -398,7 +397,6 @@ export class FamilyTreeComponent implements OnInit {
         this.familyMap.get(+data.motherId).lastName;
 
     this.popupDateOfDeathValid = this.util.isDateValid(data.dateOfDeath);
-    
   }
 
   resetPopupValues(): void {
@@ -422,11 +420,15 @@ export class FamilyTreeComponent implements OnInit {
 
   cancelEditMode() {
     this.popupEditMode = false;
-    this.popupDateOfDeathValid = this.util.isDateValid(this.popupNode.dateOfDeath);
+    this.popupDateOfDeathValid = this.util.isDateValid(
+      this.popupNode.dateOfDeath
+    );
   }
 
   updateFamilYMemberInfo() {
-    console.log(`FatherId:${this.fatherId}, DateOfBirth:${this.dateOfBirth}, DateOfDeath:${this.dateOfDeath}`);
+    console.log(
+      `FatherId:${this.fatherId}, DateOfBirth:${this.dateOfBirth}, DateOfDeath:${this.dateOfDeath}`
+    );
   }
 
   isPopupMemberMarried(): boolean {
@@ -434,12 +436,50 @@ export class FamilyTreeComponent implements OnInit {
   }
 
   runTransition() {
+    console.log('Transition trigerred');
+    // Clear the SVG to remove any previous tree
+    this.svg.selectAll("*").remove();
+    // Redraw the tree
+    this.drawTree();  // Call your existing method to draw the tree
+    // Trigger the transition after redraw
+    this.triggerTransition();
+  }
+
+  private triggerTransition(): void {
+    const root = d3.hierarchy(this.treeData.rootNode, (d) => d.children);
+    const treeLayout = d3
+      .tree()
+      .size([this.height, this.width - this.margin.left - this.margin.right]);
+    treeLayout(root);
+  
+    // Animate links
     this.svg
       .selectAll('.link')
       .transition()
-      .duration(2000) // Animation duration in milliseconds
-      .ease(d3.easeLinear) // Linear easing for constant speed
-      .style('stroke-dashoffset', 0); // Animate the stroke to 0, revealing the path;
+      .duration(2000)
+      .ease(d3.easeLinear)
+      .style('stroke-dashoffset', 0); // Revealing links if they were initially hidden
+  
+    // Animate nodes
+    this.svg
+      .selectAll('.node')
+      .transition()
+      .duration(2000)
+      .attr('transform', (d: any) => `translate(${d.y},${d.x})`);
+  
+    // Optional: Animate the color change or other attributes if required
+    this.svg
+      .selectAll('.node circle')
+      .transition()
+      .duration(2000)
+      .style('fill', '#ffcc00');  // Example for color change
+  
+    this.svg
+      .selectAll('.node text')
+      .transition()
+      .duration(2000)
+      .style('fill', '#ffffff');
   }
+  
 
 }
