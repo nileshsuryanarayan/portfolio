@@ -18,6 +18,8 @@ export class FamilyTreeComponent implements OnInit {
   private treeData: Tree;
   private g: any;
 
+  pageTitle = 'Suryanarayan Family Tree';
+
   private BUFFER_SIZE: number = 100;
 
   popupVisible = false;

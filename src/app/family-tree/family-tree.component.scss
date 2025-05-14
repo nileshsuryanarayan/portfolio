@@ -200,7 +200,22 @@ svg {
     margin: 8px 0;
   }
 
-  
+  .btn-norm {
+    text-align: center;
+     text-transform: uppercase;
+     transition: 0.5s;
+     background-size: 200% auto;
+     color: white;            
+    //  box-shadow: 0 0 20px #eee;
+     border-radius: 4px;
+     cursor: pointer;
+  }
+
+  .btn-norm:hover {
+    cursor: pointer;
+    box-shadow: 0 0 20px #eee;
+  }
+
   .btn-grad {background-image: linear-gradient(to right, #77A1D3 0%, #79CBCA  51%, #77A1D3  100%)}
   // .btn-grad {background-image: linear-gradient(to right, #314755 0%, #26a0da  51%, #314755  100%)}
   .btn-grad {
@@ -261,8 +276,64 @@ svg {
     position: relative; /* Needed for absolute positioning of SVG inside the wrapper */
   }
 
-  // svg {
-  //   width: 100%;
-  //   height: 100%;
-  //   overflow: visible; /* Ensure that the SVG elements are visible outside the container */
-  // }
+/* ****** Header Styling ****** */
+.sample-header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 68px;
+  min-height: 5%;
+  max-height: 15%;
+  background-color: #26a0da;
+}
+.sample-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: MidnightBlue;
+  opacity: 0.3;
+}
+.page-title {
+    font-size: 28px;
+    color: white;
+    border: 2px double white;
+    margin: 6px;
+    text-align: center;
+}
+.tree-logo {
+  width: 50px;
+  height: 50px;
+  border: 2px double white;
+  margin: 6px;
+  border-radius: 50%;
+  padding: 1px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+}
+h1 {
+  font-weight: 500;
+}
+h2 {
+  font-weight: 400;
+}
+.sample-section-wrap {
+  position: relative;
+  background-color: white;
+}
+.sample-section {
+  position: relative;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 40px;
+}
