@@ -8,8 +8,8 @@ const routes: Routes = [
   { path: 'portfolio', component: PortfolioComponent },
   { path: 'template-1', component: TemplateComponent },
   { path: 'family-tree', component: FamilyTreeComponent },
-  { path: '**', redirectTo: 'portfolio', pathMatch: 'full' },
-  { path: '', redirectTo: 'portfolio', pathMatch: 'full' }
+  { path: '**', redirectTo: 'family-tree', pathMatch: 'full' },
+  { path: '', redirectTo: 'family-tree', pathMatch: 'full' }
 ];
 
 @NgModule({
