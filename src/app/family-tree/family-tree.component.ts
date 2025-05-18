@@ -8,7 +8,7 @@ import { UtilityService } from '../common/services/utility.service';
 @Component({
   selector: 'app-family-tree',
   templateUrl: './family-tree.component.html',
-  styleUrls: ['./family-tree.component.scss'],
+  styleUrls: ['./family-tree.component.scss', './family-tree.component.mobile.scss'],
 })
 export class FamilyTreeComponent implements OnInit {
   private svg: any;

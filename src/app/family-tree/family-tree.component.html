@@ -5,7 +5,7 @@
     <div class="grid-1 tree-logo">
       <img src="../../assets/tree-of-life-white.png">
     </div>
-    <div class="grid-5 page-title">
+    <div class="grid-5 page-title" (click)="runTransition()">
       <p>
         {{ pageTitle }}
       </p>
@@ -29,29 +29,33 @@
   <div class="popup" *ngIf="popupVisible">
     <div class="popup-content">
       <div class="grid popop-header close-btn-div">
-        <div class="grid-11 popup-header-text">{{ popupNode.firstName }} {{ popupNode.lastName }}</div>
-        <div class="grid-1 close-btn-div">
+        <div class="grid-1 close-btn-div" id="close-before">
           <div (click)="hideDetails()" class="close-btn" id="close-btn">&nbsp;&nbsp;X&nbsp;&nbsp;</div>
         </div>
+        <div class="grid-11 popup-header-text">{{ popupNode.firstName }} {{ popupNode.lastName }}</div>
+        <div class="grid-1 close-btn-div" id="close-after">
+          <div (click)="hideDetails()" class="close-btn" id="close-btn">&nbsp;&nbsp;X&nbsp;&nbsp;</div>
+        </div>
+        
       </div>
       <div class="grid popup-content-row">
         <div class="grid-5 left popup-field-lbl popup-field">Father</div>
-        <div *ngIf="popupEditMode; else fatherName" class="grid-7 left">
+        <div *ngIf="popupEditMode; else fatherName" class="grid-6 left">
           <select id="father" name="father" [(ngModel)]="fatherId">
             <option *ngFor="let male of males" value="{{ male.id }}">{{ male.firstName }} {{ male.lastName }}</option>
           </select>
         </div>
         <ng-template #fatherName>
-          <div class="grid-7 left popup-field">: {{ popupFatherName }}</div>
+          <div class="grid-6 left popup-field">: {{ popupFatherName }}</div>
         </ng-template>
       </div>
       <div class="grid popup-content-row">
         <div class="grid-5 left popup-field-lbl popup-field">Mother</div>
-        <div class="grid-7 left popup-field">: {{ popupMotherName }}</div>
+        <div class="grid-6 left popup-field">: {{ popupMotherName }}</div>
       </div>
       <div class="grid popup-content-row">
         <div class="grid-5 left popup-field-lbl popup-field">Spouse</div>
-        <div class="grid-7 grid popup-content-row">
+        <div class="grid-6 grid popup-content-row">
           <div *ngFor="let spouse of popupNode.spouse; index as spIndex" class="grid-12">
             <div class="grid-12 left popup-field">: {{ spIndex + 1 }}. {{ spouse.firstName }} {{ spouse.lastName }}</div>
           </div>
@@ -59,19 +63,19 @@
       </div>
       <div class="grid popup-content-row">
         <div class="grid-5 left popup-field-lbl popup-field">Date of Birth</div>
-        <div *ngIf="popupEditMode; else dateOfBirth" class="grid-7 left">
+        <div *ngIf="popupEditMode; else dateOfBirth" class="grid-6 left">
           <input type="date" [(ngModel)]="dateOfBirth"><!-- [(ngModel)]="dateOfBirth" -->
         </div>
-        <ng-template #dateOfBirth class="grid-7 left">
+        <ng-template #dateOfBirth class="grid-6 left">
           <div class="grid-7 left popup-field">: {{ popupNode.dateOfBirth }}</div>
         </ng-template>
       </div>
       <div *ngIf="popupDateOfDeathValid" class="grid popup-content-row">
         <div class="grid-5 left popup-field-lbl popup-field">Date of Death</div>
-        <div *ngIf="popupEditMode; else dateOfDeath" class="grid-7 left">
+        <div *ngIf="popupEditMode; else dateOfDeath" class="grid-6 left">
           <input type="date" [(ngModel)]="dateOfDeath" >
         </div>
-        <ng-template #dateOfDeath class="grid-7 left">
+        <ng-template #dateOfDeath class="grid-6 left">
           <div class="grid-7 left popup-field">: {{ popupNode.dateOfDeath }}</div>
         </ng-template>
       </div>
