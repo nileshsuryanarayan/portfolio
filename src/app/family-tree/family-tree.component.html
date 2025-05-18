@@ -1,30 +1,17 @@
-<div class="sample-header grid">
-  <div class="grid-2"></div>
-  <div class="grid-8 grid">
-    <div class="grid-3"></div>
-    <div class="grid-1 tree-logo">
-      <img src="../../assets/tree-of-life-white.png">
+<div class="sample-header">
+  <div class="grid-8 header-content">
+    <div class="tree-logo" (click)="resetZoom()">
+      <img src="../../assets/tree-of-life-white.png" />
     </div>
-    <div class="grid-5 page-title" (click)="runTransition()">
-      <p>
-        {{ pageTitle }}
-      </p>
+    <div class="page-title" (click)="runTransition()">
+      <p>{{ pageTitle }}</p>
     </div>
-    <div class="grid-3"></div>
   </div>
-  <div class="grid-1 center">
-    <!-- <button class="btn-norm" style="top: 40%;" (click)="runTransition()" >Draw</button> -->
-  </div>
-  <div class="grid-1 center v-center-wrapper">
-    <div class="vertical-center">
-      <button class="btn-norm" style="top: 40%;" (click)="runTransition()" >Draw</button>
-    </div>
-  </div> 
 </div>
+
 <div class="family-tree-container">
-  <!-- <button class="btn-grad float-button" style="top: 40%;" (click)="runTransition()" >Draw again</button> -->
   <div class="svg-wrapper">
-    <svg></svg>
+    <svg id="familyTree" width="100%" height="100%" viewBox="0 0 800 600"></svg>
   </div>
   <div class="popup" *ngIf="popupVisible">
     <div class="popup-content">
@@ -36,7 +23,6 @@
         <div class="grid-1 close-btn-div" id="close-after">
           <div (click)="hideDetails()" class="close-btn" id="close-btn">&nbsp;&nbsp;X&nbsp;&nbsp;</div>
         </div>
-        
       </div>
       <div class="grid popup-content-row">
         <div class="grid-5 left popup-field-lbl popup-field">Father</div>
@@ -87,9 +73,6 @@
       </div>
       <!-- Section to add a spouse details -->
       <div class="spouse-details">
-        <!-- <div class="content">
-          
-        </div> -->
         <div class="grid content-bg">
           <div class="grid-5">
             <input type="text" placeholder="First Name" [(ngModel)]="spouseFirstName">

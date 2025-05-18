@@ -103,127 +103,95 @@ export class FamilyTreeComponent implements OnInit {
   }
 
   private drawTree(): void {
+    // Clear previous contents
+    this.svg.selectAll('*').remove();
+
+    // Define zoom behavior
+    const zoom = d3.zoom<SVGSVGElement, unknown>()
+      .scaleExtent([0.5, 3])
+      .on('zoom', (event) => {
+        g.attr('transform', event.transform);
+      });
+
+    // Append a group for zoomable content
+    const g = this.svg.append('g').attr('class', 'zoomable-group');
+    this.svg.call(zoom);
+
+    // Create hierarchy and layout
     const root = d3.hierarchy(this.treeData.rootNode, (d) => d.children);
     const treeLayout = d3
       .tree()
       .size([this.height, this.width - this.margin.left - this.margin.right]);
     treeLayout(root);
 
-    // Calculate max width and height based on node positions
-    const maxX = d3.max(root.descendants(), (d) => d.y);
-    const maxY = d3.max(root.descendants(), (d) => d.x);
-
-    // Update SVG dimensions if needed
-    const newWidth = maxX + this.margin.left + this.margin.right; // Add margin as needed
-    const newHeight = maxY + this.margin.top + this.margin.bottom; // Add margin as needed
-
-    this.svg.attr('width', newWidth + this.BUFFER_SIZE);
-    this.svg.attr('height', newHeight + this.BUFFER_SIZE);
-
-    // Define gradient in SVG
-    const gradient = this.svg
-      .append('defs')
-      .append('linearGradient')
-      .attr('id', 'tree-gradient')
-      .attr('x1', '0%')
-      .attr('x2', '100%')
-      .attr('y1', '0%')
-      .attr('y2', '100%');
-
-    gradient.append('stop').attr('offset', '0%').attr('stop-color', '#6b3f2b'); // Dark brown for tree trunk
-
-    gradient
-      .append('stop')
-      .attr('offset', '100%')
-      .attr('stop-color', '#d6b38b'); // Lighter brown for branch tips
-
-    const electricBlueGradient = this.svg
-      .append('defs')
-      .append('linearGradient')
-      .attr('id', 'electric-blue-gradient')
-      .attr('x1', '0%')
-      .attr('x2', '100%')
-      .attr('y1', '0%')
-      .attr('y2', '100%');
-
-    electricBlueGradient.append('stop').attr('offset', '0%').attr('stop-color', '#00d9ff'); // Light electric blue
-    electricBlueGradient.append('stop').attr('offset', '50%').attr('stop-color', '#0077ff'); // Medium electric blue
-    electricBlueGradient.append('stop').attr('offset', '100%').attr('stop-color', '#00ffcc'); // Bright turquoise electric blue
-
-    const maleGradient = this.svg
-      .append('defs')
-      .append('linearGradient')
-      .attr('id', 'male-gradient')
-      .attr('x1', '0%')
-      .attr('x2', '71%')
-      .attr('x3', '100%')
-      .attr('y1', '0%')
-      .attr('y2', '71%')
-      .attr('y3', '100%');
-
-    maleGradient.append('stop').attr('offset', '0%').attr('stop-color', '#77A1D3');
-    maleGradient.append('stop').attr('offset', '71%').attr('stop-color', '#79CBCA');
-    maleGradient.append('stop').attr('offset', '100%').attr('stop-color', '#77A1D3');
-
-    const femaleGradient = this.svg
-      .append('defs')
-      .append('linearGradient')
-      .attr('id', 'female-gradient')
-      .attr('x1', '0%')
-      .attr('x2', '71%')
-      .attr('x3', '100%')
-      .attr('y1', '0%')
-      .attr('y2', '71%')
-      .attr('y3', '100%');
-
-    femaleGradient.append('stop').attr('offset', '0%').attr('stop-color', '#ff6e7f');
-    femaleGradient.append('stop').attr('offset', '71%').attr('stop-color', '#FFB6C1');
-    femaleGradient.append('stop').attr('offset', '100%').attr('stop-color', '#ff6e7f');
+    // Calculate dimensions
+    const maxX = d3.max(root.descendants(), (d) => d.y)!;
+    const maxY = d3.max(root.descendants(), (d) => d.x)!;
+    const newWidth = maxX + this.margin.left + this.margin.right + this.BUFFER_SIZE;
+    const newHeight = maxY + this.margin.top + this.margin.bottom + this.BUFFER_SIZE;
 
     this.svg
+      .attr('width', newWidth)
+      .attr('height', newHeight)
+      .attr('viewBox', `0 0 ${newWidth} ${newHeight}`);
+
+    // Gradients
+    const defs = g.append('defs');
+
+    const addGradient = (id: string, stops: [string, string][]) => {
+      const grad = defs.append('linearGradient').attr('id', id)
+        .attr('x1', '0%').attr('x2', '100%')
+        .attr('y1', '0%').attr('y2', '100%');
+      stops.forEach(([offset, color]) => {
+        grad.append('stop').attr('offset', offset).attr('stop-color', color);
+      });
+    };
+
+    addGradient('tree-gradient', [['0%', '#6b3f2b'], ['100%', '#d6b38b']]);
+    addGradient('electric-blue-gradient', [['0%', '#00d9ff'], ['50%', '#0077ff'], ['100%', '#00ffcc']]);
+    addGradient('male-gradient', [['0%', '#77A1D3'], ['71%', '#79CBCA'], ['100%', '#77A1D3']]);
+    addGradient('female-gradient', [['0%', '#ff6e7f'], ['71%', '#FFB6C1'], ['100%', '#ff6e7f']]);
+
+    // Links
+    const linkPath = g
       .selectAll('.link')
       .data(root.links())
       .enter()
       .append('path')
       .attr('class', 'link')
       .attr('d', (d: any) => {
-        const curvature = 0.5; // Controls the curvature of the branches
+        const curvature = 0.5;
         const sourceX = d.source.y + 100;
         const sourceY = d.source.x + 15;
         const targetX = d.target.y;
         const targetY = d.target.x + 15;
-
-        return `M${sourceX},${sourceY}C${
-          sourceX + curvature * (targetX - sourceX)
-        },${sourceY + 30} ${targetX - curvature * (targetX - sourceX)},${
-          targetY - 30
-        } ${targetX},${targetY}`;
+        return `M${sourceX},${sourceY}C${sourceX + curvature * (targetX - sourceX)
+          },${sourceY + 30} ${targetX - curvature * (targetX - sourceX)},${targetY - 30
+          } ${targetX},${targetY}`;
       })
       .style('fill', 'none')
-      .style('stroke', 'url(#electric-blue-gradient)') // tree-gradient
+      .style('stroke', 'url(#electric-blue-gradient)')
       .style('stroke-width', (d: any) => {
-        // Use depth of the node to determine stroke width (root node has depth 0, deeper nodes get smaller stroke)
         const parentDepth = d.source.depth;
-        const maxDepth = d3.max(root.descendants(), (node: any) => node.depth); // Maximum depth in the tree
-
-        // Tapering effect: deeper nodes will have thinner strokes
-        return Math.max(1, 5 - (parentDepth / maxDepth) * 4); // Return stroke width based on depth
+        const maxDepth = d3.max(root.descendants(), (node: any) => node.depth)!;
+        return Math.max(1, 5 - (parentDepth / maxDepth) * 4);
       })
       .style('stroke-dasharray', function (this: SVGPathElement) {
-        const length = this.getTotalLength();
-        return length; // Make the dash array equal to the path length
+        return this.getTotalLength();
       })
       .style('stroke-dashoffset', function (this: SVGPathElement) {
-        const length = this.getTotalLength();
-        return length; // Start with the path hidden
-      })
-      .transition()
-      .duration(2000) // Animation duration in milliseconds
-      .ease(d3.easeLinear) // Linear easing for constant speed
-      .style('stroke-dashoffset', 0); // Animate the stroke to 0, revealing the path;
+        return this.getTotalLength();
+      });
 
-    // Render spouse connections and nodes
-    const nodes = this.svg
+    // Animate links
+    linkPath
+      .transition()
+      .duration(2000)
+      .ease(d3.easeLinear)
+      .style('stroke-dashoffset', 0);
+
+    // Nodes
+    const nodes = g
       .selectAll('.node')
       .data(root.descendants())
       .enter()
@@ -236,105 +204,80 @@ export class FamilyTreeComponent implements OnInit {
       .attr('width', 100)
       .attr('height', 30)
       .attr('fill', (d: any) => (d.data.gender === 'MALE' ? 'url(#male-gradient)' : 'url(#female-gradient)'))
-      // .attr('stroke', (d: any) => (d.data.gender === 'MALE' ? 'blue' : 'pink'))
-      .attr('id', (d: any) => `${d.data.firstName}-${d.data.lastName}`)
       .attr('rx', 2)
-      .attr('ry', 2);
+      .attr('ry', 2)
+      .attr('id', (d: any) => `${d.data.firstName}-${d.data.lastName}`);
 
-    // Append leaf shapes around each node
-    nodes
-      .append('path')
-      .attr('d', 'M 0,0 Q 10,10 20,0 Q 10,-10 0,0 Z') // Simple leaf shape (you can use more complex ones)
+    // Leaf shapes (optional visual touch)
+    nodes.append('path')
+      .attr('d', 'M 0,0 Q 10,10 20,0 Q 10,-10 0,0 Z')
       .attr('fill', 'green')
-      .attr(
-        'transform',
-        (d: any) => `translate(${d.y - 60},${d.x - 30}) rotate(-30)`
-      )
-      .style('opacity', 0.7); // Slight transparency to make it subtle
-
-    nodes
-      .append('path')
-      .attr('d', 'M 0,0 Q 10,10 20,0 Q 10,-10 0,0 Z') // Leaf on the opposite side
-      .attr('fill', 'green')
-      .attr(
-        'transform',
-        (d: any) => `translate(${d.y + 60},${d.x - 30}) rotate(30)`
-      )
+      .attr('transform', (d: any) => `translate(${d.y - 60},${d.x - 30}) rotate(-30)`)
       .style('opacity', 0.7);
 
-    nodes
-      .append('text')
+    nodes.append('path')
+      .attr('d', 'M 0,0 Q 10,10 20,0 Q 10,-10 0,0 Z')
+      .attr('fill', 'green')
+      .attr('transform', (d: any) => `translate(${d.y + 60},${d.x - 30}) rotate(30)`)
+      .style('opacity', 0.7);
+
+    nodes.append('text')
       .attr('dy', 20)
       .attr('x', 50)
       .style('text-anchor', 'middle')
       .text((d: any) => d.data.firstName)
-      // .on('mouseover', (event, d) => this.runTransition())
       .on('click', (event, d) => this.showDetails(d.data, d.x, d.y));
 
-    // Render spouse nodes and links
+    // Spouse rendering
     root.descendants().forEach((d) => {
       if (d.data.spouse) {
-        const spouses = d.data.spouse; // Array.isArray(d.data.spouse) ? d.data.spouse : [d.data.spouse];
-
+        const spouses = d.data.spouse;
         let d1y1 = d.y;
         let d1x1 = d.x;
-        const yMultiplier = 0;
+
         spouses.forEach((spouse, index) => {
-          // Render spouse node
           const spouseNode = {
             ...spouse,
-            x: d1x1 + 40, // Align spouse on the same y-axis as the partner
-            y: d1y1, // Adjust y position to display spouse node to the right
+            x: d1x1 + 40,
+            y: d1y1,
           };
 
-          const spouseGroup = this.svg
+          const spouseGroup = g
             .append('g')
             .attr('class', 'node')
             .attr('id', `${d.data.firstName}`)
             .attr('transform', `translate(${spouseNode.y},${spouseNode.x})`);
 
-            spouseGroup.append('rect')
+          spouseGroup.append('rect')
             .attr('width', 100)
             .attr('height', 30)
-            .attr('fill', (a: any) => (spouseNode.gender === 'MALE' ? 'url(#male-gradient)' : 'url(#female-gradient)')) // (d: any) => (d.data.gender === 'MALE' ? 'url(#male-gradient)' : 'url(#female-gradient)')
-            // .attr('stroke', spouseNode.gender === 'MALE' ? 'blue' : 'pink')
-            .attr(
-              'id',
-              (d: any) => `${spouseNode.firstName}-${spouseNode.lastName}`
-            )
+            .attr('fill', spouseNode.gender === 'MALE' ? 'url(#male-gradient)' : 'url(#female-gradient)')
             .attr('rx', 2)
-            .attr('ry', 2);
+            .attr('ry', 2)
+            .attr('id', `${spouseNode.firstName}-${spouseNode.lastName}`);
 
-          spouseGroup
-            .append('text')
-            .attr('dy', index * yMultiplier + 20)
+          spouseGroup.append('text')
+            .attr('dy', 20)
             .attr('x', 50)
             .style('text-anchor', 'middle')
             .text(spouseNode.firstName)
-            // .on('mouseover', (event, d) =>
-            //   this.runTransition()
-            // )
-            .on('click', (event, d) => this.showDetails(spouseNode, spouseNode.x, spouseNode.y));
-          // .on('mouseout', () => this.hideDetails());
+            .on('click', () => this.showDetails(spouseNode, spouseNode.x, spouseNode.y));
 
-          // Draw line between partner and spouse
-          this.svg
-            .append('line') // Line 1
+          // Spouse lines
+          g.append('line')
             .attr('class', 'link')
-            .attr('x1', d1y1 + 70) // Partner's position
-            .attr('y1', d1x1 + 30) // Center of partner's rectangle
-            .attr('x2', spouseNode.y + 70) // Spouse's position
-            .attr('y2', spouseNode.x) // Center of spouse's rectangle
+            .attr('x1', d1y1 + 70)
+            .attr('y1', d1x1 + 30)
+            .attr('x2', spouseNode.y + 70)
+            .attr('y2', spouseNode.x)
             .style('stroke', 'black');
 
-          // Draw line between partner and spouse
-          this.svg
-            .append('line') // Line 2
+          g.append('line')
             .attr('class', 'link')
-            .attr('x1', d1y1 + 30) // Partner's position
-            .attr('y1', d1x1 + 30) // Center of partner's rectangle
-            .attr('x2', spouseNode.y + 30) // Spouse's position
-            .attr('y2', spouseNode.x) // Center of spouse's rectangle
+            .attr('x1', d1y1 + 30)
+            .attr('y1', d1x1 + 30)
+            .attr('x2', spouseNode.y + 30)
+            .attr('y2', spouseNode.x)
             .style('stroke', 'black');
 
           d1y1 = spouseNode.y;
@@ -342,38 +285,6 @@ export class FamilyTreeComponent implements OnInit {
         });
       }
     });
-
-    this.svg
-      .selectAll('.link')
-      .data(root.links())
-      .enter()
-      .append('path')
-      .attr('class', 'link')
-      .attr('d', (d: any) => {
-        const sourceX = d.source.y + 100;
-        const sourceY = d.source.x + 15;
-        const targetX = d.target.y;
-        const targetY = d.target.x + 15;
-
-        // Multiple curve points to simulate multiple branches
-        const curvature1 = 0.3;
-        const curvature2 = 0.5;
-        const curvature3 = 0.7;
-
-        return `M${sourceX},${sourceY}
-                C${sourceX + curvature1 * (targetX - sourceX)},${sourceY - 50}
-                ${targetX - curvature2 * (targetX - sourceX)},${targetY - 50}
-                ${targetX},${targetY}`;
-      })
-      .style('fill', 'none')
-      .style('stroke', 'black')
-      .style('stroke-width', (d: any) => {
-        const distance = Math.abs(d.source.x - d.target.x); // Vertical distance between nodes
-        const maxDistance = d3.max(root.links(), (link: any) =>
-          Math.abs(link.source.x - link.target.x)
-        ); // Maximum distance for normalization
-        return Math.max(1, 5 - (distance / maxDistance) * 4); // Tapered stroke width
-      });
   }
 
   showDetails(data: Node, x: number, y: number): void {
@@ -483,6 +394,15 @@ export class FamilyTreeComponent implements OnInit {
       .transition()
       .duration(2000)
       .style('fill', '#ffffff');
+  }
+
+  resetZoom(): void {
+    console.log('Resetting zoom');
+    const svgElement = this.svg;
+    svgElement.transition().duration(500).call(
+      d3.zoom().transform,
+      d3.zoomIdentity
+    );
   }
   
 
