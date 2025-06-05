@@ -18,6 +18,11 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BasicHeadersInterceptor } from './common/interceptors/basic-headers.interceptor';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatRadioModule } from '@angular/material/radio';
 import { UtilityService } from './common/services/utility.service';
 
 @NgModule({
@@ -39,7 +44,12 @@ import { UtilityService } from './common/services/utility.service';
     MatTreeModule,
     HttpClientModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    MatInputModule,
+    MatRadioModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatMomentDateModule
   ],
   providers: [
     FamilyTreeService,

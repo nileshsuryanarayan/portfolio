@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { Node, Tree } from "./family-tree.model";
+import { API, AUTH, ENDPOINTS } from "../common/constants/env.constant";
 
 /**
  * Interface representing the restructured family data.
@@ -26,13 +27,17 @@ export class FamilyTreeService {
      * @returns {Observable<Node[]>} An observable that emits an array of Node objects.
      */
     public getFamilyData(): Observable<Node[]> {
-        const username = 'sandeep';
-        const password = 'test123';
-
-        const authHeader = 'Basic ' + btoa(username + ':' + password);
+        const authHeader = 'Basic ' + btoa(AUTH.USERNAME + ':' + AUTH.PASSWORD);
         const headers = new HttpHeaders().set('Authorization', authHeader);
 
-        return this.http.get<Node[]>('http://localhost:8080/suryanarayan-family-tree-api/family-members', { headers });
+        return this.http.get<Node[]>(`${API.FAMILY_TREE}${ENDPOINTS.GET_FAMILY_DATA}`, { headers });
+    }
+
+    public updateFamilyMember(node: Node): Observable<Node[]> {
+        const authHeader = 'Basic ' + btoa(AUTH.USERNAME + ':' + AUTH.PASSWORD);
+        const headers = new HttpHeaders().set('Authorization', authHeader);
+
+        return this.http.post<Node[]>(`${API.FAMILY_TREE}${ENDPOINTS.UPDATE_FAMILY_MEMBER}`, node, { headers });
     }
 
     /**

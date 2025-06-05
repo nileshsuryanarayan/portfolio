@@ -19,27 +19,27 @@
         <div class="grid-1 close-btn-div" id="close-before">
           <div (click)="hideDetails()" class="close-btn" id="close-btn">&nbsp;&nbsp;X&nbsp;&nbsp;</div>
         </div>
-        <div class="grid-11 popup-header-text">{{ popupNode.firstName }} {{ popupNode.lastName }}</div>
+        <div *ngIf="!popupEditMode else firstNameEdit" class="grid-11 popup-header-text">{{ popupNode.firstName }} {{ popupNode.lastName }}</div>
+        <ng-template #firstNameEdit>
+          <div class="grid-11 popup-header-text">
+            <input type="text" [(ngModel)]="popupNode.firstName" class="popup-field-edit">
+            &nbsp;&nbsp;
+            {{ popupNode.lastName }}
+          </div>
+        </ng-template>
         <div class="grid-1 close-btn-div" id="close-after">
           <div (click)="hideDetails()" class="close-btn" id="close-btn">&nbsp;&nbsp;X&nbsp;&nbsp;</div>
         </div>
       </div>
       <div class="grid popup-content-row">
         <div class="grid-5 left popup-field-lbl popup-field">Father</div>
-        <div *ngIf="popupEditMode; else fatherName" class="grid-6 left">
-          <select id="father" name="father" [(ngModel)]="fatherId">
-            <option *ngFor="let male of males" value="{{ male.id }}">{{ male.firstName }} {{ male.lastName }}</option>
-          </select>
-        </div>
-        <ng-template #fatherName>
-          <div class="grid-6 left popup-field">: {{ popupFatherName }}</div>
-        </ng-template>
+        <div class="grid-6 left popup-field">: {{ popupFatherName }}</div>
       </div>
       <div class="grid popup-content-row">
         <div class="grid-5 left popup-field-lbl popup-field">Mother</div>
         <div class="grid-6 left popup-field">: {{ popupMotherName }}</div>
       </div>
-      <div class="grid popup-content-row">
+      <div *ngIf="showSpouse" class="grid popup-content-row">
         <div class="grid-5 left popup-field-lbl popup-field">Spouse</div>
         <div class="grid-6 grid popup-content-row">
           <div *ngFor="let spouse of popupNode.spouse; index as spIndex" class="grid-12">
@@ -72,43 +72,131 @@
         </div>
       </div>
       <!-- Section to add a spouse details -->
-      <div class="spouse-details">
+      <div *ngIf="popupEditMode && showSpouseForm" class="spouse-details">
+        <div class="grid">
+          <div class="grid-3 section-header popup-field">
+            Spouse Details
+          </div>
+        </div>
         <div class="grid content-bg">
           <div class="grid-5">
-            <input type="text" placeholder="First Name" [(ngModel)]="spouseFirstName">
+            <mat-form-field appearance="outline" class="custom-form-field">
+              <mat-label>First Name</mat-label>
+              <input matInput [(ngModel)]="spouseFirstName">
+            </mat-form-field>
           </div>
           <div class="grid-2"></div>
           <div class="grid-5">
-            <input type="text" placeholder="Last Name" [(ngModel)]="spouseLastName">
+            <mat-form-field appearance="outline">
+              <mat-label>Last Name</mat-label>
+              <input matInput [(ngModel)]="spouseLastName">
+            </mat-form-field>
           </div>
         </div>
         <div class="grid  content-bg">
           <div class="grid-5">
-            <input type="date" [(ngModel)]="spouseDateOfBirth">
+            <mat-form-field>
+              <input matInput
+                [matDatepicker]="birthDatePicker"
+                placeholder="Date of Birth"
+                (dateChange)="setDateOfBirth($event.value)">
+              <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
+              <mat-datepicker #birthDatePicker></mat-datepicker>
+            </mat-form-field>
           </div>
           <div class="grid-2"></div>
           <div class="grid-5">
-            <input type="date" [(ngModel)]="spouseDateOfDeath">
+            <!-- <mat-form-field>
+              <input matInput
+                [matDatepicker]="deathDatePicker"
+                placeholder="Date of Death"
+                (dateChange)="setDateOfDeath($event.value)">
+              <mat-datepicker-toggle matSuffix [for]="deathDatePicker"></mat-datepicker-toggle>
+              <mat-datepicker #deathDatePicker></mat-datepicker>
+            </mat-form-field> -->
           </div>
         </div>
-        <div class="grid  content-bg">
-          <div class="grid-5 popup-field">
-            <input type="radio" value="MALE" [(ngModel)]="spouseGender">MALE
-          </div>
-          <div class="grid-2"></div>
-          <div class="grid-5 popup-field">
-            <input type="radio" value="FEMALE" [(ngModel)]="spouseGender">FEMALE
-          </div>
+        <div class="gen-content-bg">
+          <mat-radio-group  [(ngModel)]="spouseGender" color="primary">
+            <div class="popup-field">GENDER</div>
+            <mat-radio-button  value="MALE">MALE</mat-radio-button>
+            <mat-radio-button value="FEMALE">FEMALE</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="right">
+          <button (click)="saveSpouse()" class="btn-grad popup-field-lbl">Save</button>
         </div>
       </div>
       <!--       End of spouse deails      -->
+      <!--       Start of children details      -->
+      <div *ngIf="popupEditMode && showChildrenForm" class="children-wrapper">
+        <div *ngFor="let child of tempChildren; index as childIndex" class="child-details">
+          <div class="grid">
+            <div class="grid-3 section-header popup-field">
+              Child {{ childIndex + 1 }} Details
+            </div>
+            <div class="grid-9 right">
+              <button (click)="removeChild(childIndex)" class="btn-grad popup-field-lbl">
+                Remove Child
+              </button>
+            </div>
+          </div>
+          <div class="grid content-bg">
+            <div class="grid-5">
+              <mat-form-field appearance="outline" class="custom-form-field">
+                <mat-label>First Name</mat-label>
+                <input matInput [(ngModel)]="tempChildren[childIndex].firstName">
+              </mat-form-field>
+            </div>
+            <div class="grid-2"></div>
+            <div class="grid-5">
+              <mat-form-field appearance="outline">
+                <mat-label>Last Name</mat-label>
+                <input disabled matInput [(ngModel)]="tempChildren[childIndex].lastName">
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="grid  content-bg">
+            <div class="grid-5">
+              <mat-form-field>
+                <input matInput [matDatepicker]="childbirthDatePicker" placeholder="Date of Birth"
+                  (dateChange)="setChildDateOfBirth($event.value, childIndex)">
+                <mat-datepicker-toggle matSuffix [for]="childbirthDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #childbirthDatePicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="grid-2"></div>
+            <div class="grid-5">
+              <!-- <mat-form-field>
+                <input matInput [matDatepicker]="childdeathDatePicker" placeholder="Date of Death"
+                  (dateChange)="setChildDateOfDeath($event.value, childIndex)">
+                <mat-datepicker-toggle matSuffix [for]="childdeathDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #childdeathDatePicker></mat-datepicker>
+              </mat-form-field> -->
+            </div>
+          </div>
+          <div class="gen-content-bg">
+            <mat-radio-group [(ngModel)]="tempChildren[childIndex].gender" color="primary">
+              <div class="popup-field">GENDER</div>
+              <mat-radio-button value="MALE">MALE</mat-radio-button>
+              <mat-radio-button value="FEMALE">FEMALE</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <div class="right">
+          <button (click)="addChild()" class="btn-grad popup-field-lbl">+ child</button>
+          &nbsp;&nbsp;
+          <button (click)="saveChildren()" class="btn-grad popup-field-lbl">Save</button>
+        </div>
+      </div>
+      <!--       End of children details      -->
       <div *ngIf="popupEditMode; else editButton">
         <div class="grid popup-content-row">
-          <div *ngIf="isPopupMemberMarried()" class="grid-12 center">
-            <button (click)="0" class="btn-grad popup-field-lbl">Add children</button>
+          <div *ngIf="showAddChildrenBtn && !showChildrenForm" class="grid-12 center">
+            <button (click)="addChildBlock()" class="btn-grad popup-field-lbl">Add children</button>
           </div>
-          <div *ngIf="!isPopupMemberMarried()" class="grid-12 center">
-            <button (click)="0" class="btn-grad popup-field-lbl">Add spouse</button>
+          <div *ngIf="showAddSpouseBtn" class="grid-12 center">
+            <button (click)="toggleSpouseForm()" class="btn-grad popup-field-lbl">Add spouse</button>
           </div>
         </div>
         <div class="grid popup-content-row">

@@ -4,11 +4,13 @@ import { Tree, Node } from './family-tree.model';
 import { Arjun, Waman } from './family.data';
 import { FamilyTreeService } from './family-tree.service';
 import { UtilityService } from '../common/services/utility.service';
+import { Gender } from './family-node.model';
 
 @Component({
   selector: 'app-family-tree',
   templateUrl: './family-tree.component.html',
-  styleUrls: ['./family-tree.component.scss', './family-tree.component.mobile.scss'],
+  styleUrls: ['./family-tree.component.scss', './family-tree.component.mobile.scss']
+
 })
 export class FamilyTreeComponent implements OnInit {
   private svg: any;
@@ -46,11 +48,20 @@ export class FamilyTreeComponent implements OnInit {
   addedSpouse: Node;
 
   // Temp Spouse details for adding new spouse
+  showSpouse = false;
+  showSpouseForm = false;
+  showAddSpouseBtn = true; // Controls visibility of the "Add Spouse" button
   spouseFirstName: string;
   spouseLastName: string;
   spouseDateOfBirth: string;
   spouseDateOfDeath: string;
   spouseGender: string;
+  spouseNode: Node;
+
+  // Temp children details for adding new children
+  showAddChildrenBtn = true; // Controls visibility of the "Add Children" button
+  showChildrenForm = false;
+  tempChildren: Node[] = [];
 
   constructor(
     private el: ElementRef,
@@ -66,23 +77,30 @@ export class FamilyTreeComponent implements OnInit {
     this.familyService.getFamilyData().subscribe(
       (data) => {
         // Do something with data
-        let tree: Tree = this.familyService.restructure(data)?.tree;
-        this.familyMap = this.familyService.restructure(data)?.map;
-        this.males = this.familyService.filterMales(data);
-        this.females = this.familyService.filterFemales(data);
-        console.log('Restructured Data ======: ', tree);
-        console.log('MALES ======: ', this.males);
-
-        // Static data
-        this.treeData = tree;
-        this.createSvg();
-        this.drawTree();
+        this.handleFamilyData(data);
       },
       (error) => {
         // Handle error and display proper message on UI
         console.error(error);
       }
     );
+  }
+
+  /**
+   * Creates the SVG element and sets up the zoom behavior.
+   */
+  handleFamilyData(data: Node[]) {
+    let tree: Tree = this.familyService.restructure(data)?.tree;
+    this.familyMap = this.familyService.restructure(data)?.map;
+    this.males = this.familyService.filterMales(data);
+    this.females = this.familyService.filterFemales(data);
+    console.log('Restructured Data ======: ', tree);
+    console.log('MALES ======: ', this.males);
+
+    // Static data
+    this.treeData = tree;
+    this.createSvg();
+    this.drawTree();
   }
 
   private createSvg(): void {
@@ -312,6 +330,11 @@ export class FamilyTreeComponent implements OnInit {
         this.familyMap.get(+data.motherId).lastName;
 
     this.popupDateOfDeathValid = this.util.isDateValid(data.dateOfDeath);
+
+    // Show spouse
+    if(data.spouse && data.spouse.length > 0) {
+      this.showSpouse = true;
+    }
   }
 
   resetPopupValues(): void {
@@ -320,34 +343,100 @@ export class FamilyTreeComponent implements OnInit {
     this.popupMotherName = '';
     this.popupDateOfBirth = '';
     this.popupDateOfDeath = '';
+    this.clearSpouseDeails();
+    this.clearChildren();
   }
 
   hideDetails(): void {
     this.popupVisible = false;
     this.popupEditMode = false;
+    this.showSpouseForm = false;
+    this.showChildrenForm = false;
     this.resetPopupValues();
   }
 
   switchToEditMode() {
     this.popupEditMode = true;
     this.popupDateOfDeathValid = true;
+    this.showAddSpouseBtn = !this.popupNode.married;
+    this.showAddChildrenBtn = this.popupNode.married;
   }
 
   cancelEditMode() {
     this.popupEditMode = false;
+    this.clearSpouseDeails();
+    this.clearChildren();
     this.popupDateOfDeathValid = this.util.isDateValid(
       this.popupNode.dateOfDeath
     );
   }
 
   updateFamilYMemberInfo() {
-    console.log(
-      `FatherId:${this.fatherId}, DateOfBirth:${this.dateOfBirth}, DateOfDeath:${this.dateOfDeath}`
+    // Check for Spouse details added
+    this.buildSpouseObject();
+    // Check for Children details added
+    this.buildChildrenObjects();
+
+    console.log('Updated Node:', this.popupNode);
+    console.log('Spouse Node:', this.spouseNode);
+    console.log('Children Nodes:', this.tempChildren);
+    
+    // Call to service to update the family member info
+    this.familyService.updateFamilyMember(this.popupNode).subscribe(
+      (response) => {
+        // Handle successful update response
+        console.log('Family member updated successfully:', response);
+        this.handleFamilyData(response);
+      },
+      (error) => {
+        // Handle error response
+        console.error('Error updating family member:', error);
+      }
     );
   }
 
-  isPopupMemberMarried(): boolean {
-    return this.popupNode.married ? this.popupNode.married : false;
+  buildSpouseObject() {
+    this.spouseNode = {
+      firstName: this.spouseFirstName,
+      lastName: this.spouseLastName,
+      dateOfBirth: new Date(this.spouseDateOfBirth),
+      dateOfDeath: new Date(this.spouseDateOfDeath),
+      gender: this.spouseGender && this.spouseGender === 'MALE' ? 'MALE' : 'FEMALE',
+      married: true,
+      children: [],
+      spouseIds: [ `${this.popupNode.id}` ],
+      childrenIds: [],
+    };
+    if (this.popupNode.spouse && this.popupNode.spouse.length > 0) {
+      console.warn('Spouse already exists for this node');
+    } else {
+      this.popupNode.spouse = [ this.spouseNode ];  
+    }
+  }
+
+  buildChildrenObjects() {
+    if(this.tempChildren && this.tempChildren.length > 0) {
+      let fatherId = '';
+      let motherId = '';
+
+      if(this.popupNode.gender === 'MALE') {
+        fatherId = this.popupNode.id.toString();
+        motherId = this.popupNode.spouseIds && this.popupNode.spouseIds.length > 0 ? this.popupNode.spouseIds[0] : '';
+      } else {
+        motherId = this.popupNode.id.toString();
+        fatherId = this.popupNode.spouseIds && this.popupNode.spouseIds.length > 0 ? this.popupNode.spouseIds[0] : '';
+      }
+
+      this.tempChildren.forEach((child) => {
+        child.fatherId = fatherId;
+        child.motherId = motherId;
+        child.children = [];
+        child.spouse = [];
+        child.married = false;
+
+        this.popupNode.children.push(child);
+      });
+    }
   }
 
   runTransition() {
@@ -379,8 +468,8 @@ export class FamilyTreeComponent implements OnInit {
     this.svg
       .selectAll('.node')
       .transition()
-      .duration(2000)
-      .attr('transform', (d: any) => `translate(${d.y},${d.x})`);
+      .duration(2000);
+      // .attr('transform', (d: any) => `translate(${d.y},${d.x})`);
   
     // Optional: Animate the color change or other attributes if required
     this.svg
@@ -404,6 +493,82 @@ export class FamilyTreeComponent implements OnInit {
       d3.zoomIdentity
     );
   }
+
+  toggleSpouseForm() {
+    if(this.popupEditMode) {
+      this.showSpouseForm = !this.showSpouseForm;
+      this.showAddSpouseBtn = !this.showAddSpouseBtn;
+    } else {
+      console.warn('Cannot toggle spouse form when not in edit mode');
+    }
+    
+  }
+
+  setDateOfBirth(date: string) {
+    this.spouseDateOfBirth = date ? date : '';
+  }
+
+  setDateOfDeath(date: string) {
+    this.spouseDateOfDeath = date ? date : '';
+  }
+
+  saveSpouse() {
+    console.log('Saving spouse details');
+    console.log(`First Name: ${this.spouseFirstName}, Last Name: ${this.spouseLastName}, Date of Birth: ${this.spouseDateOfBirth}, Date of Death: ${this.spouseDateOfDeath}, Gender: ${this.spouseGender}`);
+  }
   
+  clearSpouseDeails() {
+    this.showAddSpouseBtn = true;
+    this.showSpouseForm = false;
+    this.spouseFirstName = '';
+    this.spouseLastName = '';
+    this.spouseDateOfBirth = '';
+    this.spouseDateOfDeath = '';
+    this.spouseGender = '';
+  }
+    
+  clearChildren() {
+    this.showChildrenForm = false;
+    this.showAddChildrenBtn = true;
+    this.tempChildren = [];
+  }
+
+  addChildBlock() {
+    this.showChildrenForm = true;
+  }
+
+  addChild() {
+    let newChild: Node = {
+      firstName: '',
+      lastName: this.popupNode.lastName,
+      dateOfBirth: new Date(),
+      dateOfDeath: new Date(),
+      gender: "FEMALE",
+      married: false,
+      children: [],
+    };
+    this.tempChildren.push(newChild);
+  }
+
+  setChildDateOfBirth(date, childIndex) {
+    this.tempChildren[childIndex].dateOfBirth = date ? date : '';
+  }
+
+  setChildDateOfDeath(date, childIndex) {
+    this.tempChildren[childIndex].dateOfDeath = date ? date : '';
+  }
+
+  removeChild(childIndex) {
+    if (this.tempChildren && childIndex >= 0 && childIndex < this.tempChildren.length) {
+      this.tempChildren.splice(childIndex, 1);
+    } else {
+      console.warn('Invalid child index:', childIndex);
+    }
+  }
+
+  saveChildren() {
+    console.log('Saving childrens');
+    console.log(this.tempChildren);
+  }
 
 }

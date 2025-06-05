@@ -131,7 +131,7 @@ svg {
     transform: translate(-50%, -50%); /* Center the popup */
     min-width: 300px !important;
     padding: 16px;
-    border-radius: 4px;
+    border-radius: 8px; // 4px
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     z-index: 20; /* Ensure the popup is above the overlay */
     background-color: aliceblue;
@@ -348,14 +348,10 @@ svg {
   }
 
   .spouse-details {
-    margin: 10px 0;
-    padding: 10px;
-    border-image: linear-gradient(to right, #77A1D3, #79CBCA);
-    border-width: 4px;
-    border-radius: 5px;
-    border-style: solid;
-    border-left: none;
-    border-right: none;
+    margin: 16px 0;
+    border: 2px solid #26a0da;
+    padding: 12px;
+    border-radius: 4px;
   }
 
   .float-button {
@@ -433,4 +429,38 @@ h2 {
   align-items: center;
   justify-content: flex-start;
   gap: 8px; // spacing between logo and title
+}
+
+.section-header {
+  border-bottom: 2px solid #26a0da;
+  margin-bottom: 12px;
+  padding-bottom: 4px;
+  text-align: left;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.gen-content-bg {
+  text-align: left;
+}
+
+/* **** Children details **** */
+.children-wrapper {
+  margin: 16px 0;
+  border: 2px solid #26a0da;
+  border-radius: 4px;
+}
+
+.child-details {
+  padding: 12px;
+  border-bottom: 1px solid #26a0da;
+  margin: 6px;
+}
+
+.popup-field-edit {
+  border: 1px solid #26a0da !important;
+  border-radius: 4px !important;
+  width: 50% !important;
+  box-sizing: border-box;
+  -webkit-text-fill-color: rgb(96, 95, 95) !important;
 }

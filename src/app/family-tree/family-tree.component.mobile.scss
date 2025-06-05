@@ -95,8 +95,8 @@
   }
 
   .popup {
-    max-width: 100vw;
-    width: 100%; // ensures it never overflows
+    max-width: 90vw;
+    width: 90%; // ensures it never overflows
     overflow-x: hidden; // disables horizontal scroll
     box-sizing: border-box;
   }

@@ -3,7 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  familyTreeBasePath: 'http://192.168.0.101:8080/suryanarayan-family-tree-api'
 };
 
 /*
