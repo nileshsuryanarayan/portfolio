@@ -24,6 +24,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatRadioModule } from '@angular/material/radio';
 import { UtilityService } from './common/services/utility.service';
+import { LoaderComponent } from './common/components/loader/loader.component';
+import { LoaderInterceptor } from './common/interceptors/loader.interceptor';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { UtilityService } from './common/services/utility.service';
     TemplateComponent,
     FamilyTreeComponent,
     CssGridTreeComponent,
-    CdkHierarchyComponent
+    CdkHierarchyComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
@@ -56,6 +59,11 @@ import { UtilityService } from './common/services/utility.service';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BasicHeadersInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
       multi: true
     },
     UtilityService

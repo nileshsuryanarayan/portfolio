@@ -81,7 +81,7 @@ export class FamilyTreeComponent implements OnInit {
       },
       (error) => {
         // Handle error and display proper message on UI
-        console.error(error);
+        console.error('ERROR retrieving family data:', error);
       }
     );
   }

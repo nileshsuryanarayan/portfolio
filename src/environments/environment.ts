@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  familyTreeBasePath: 'http://192.168.0.101:8080/suryanarayan-family-tree-api'
+  familyTreeBasePath: 'http://192.168.0.108:8080/suryanarayan-family-tree-api'
 };
 
 /*
